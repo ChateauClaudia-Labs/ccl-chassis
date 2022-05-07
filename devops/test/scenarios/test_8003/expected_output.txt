@@ -1,0 +1,3 @@
+
+ABC           Used to test deploying Apodeixi v0.9.7 as a Linux container locally
+DEF           Used to test deploying Apodeixi v0.9.7 as a Linux container to a remote node

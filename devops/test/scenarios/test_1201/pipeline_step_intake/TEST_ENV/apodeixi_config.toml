@@ -1,0 +1,18 @@
+
+[secrets]
+folder = "/home/apodeixi/secrets"
+
+[knowledge-base]
+knowledge-base-root-folder = "/home/apodeixi/kb"
+external-collaboration-folder = "/home/apodeixi/collaboration_area"
+
+[organization-settings]
+month-fiscal-year-starts = 6
+organization = "Cicloquimica"
+knowledge-base-areas = ["Production", "Testing Area"]
+
+[cli]
+initializer-classname = "apodeixi.cli.kb_session.KB_Session_Initializer"
+
+[backward-compabitility]
+grandfathered_scoring_cycles   = []

@@ -1,0 +1,11 @@
+
+  ------------- Help for apdo:
+  
+    This utility is intended to help DevOps operators of the Apodeixi DevOps system.
+    Available commands:
+
+      apdo --help                           Shows this help message
+      apdo pipeline list                    List of all pipeline IDs
+      apdo pipeline describe <pipeline ID>  Describes what is deployed by given pipeline
+      apdo pipeline run <pipeline ID>       Runs given pipeline
+  

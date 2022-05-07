@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# This script is targeted to DevOps operators to discover and operate pipelines.
+#
+# The name `apdo` is an abbreviation for Apodeixi DevOps
+#
+# For example, doing
+#
+#     apdo pipeline describe 1001
+#
+# would describe what pipeline with id 1001 is all about - what does it deploy (e.g., what version of Apodeixi),
+# what kind of deployment packaging (e.g., a Linux container, or a Conda package), and the target environment
+# (e.g., to which specific Linux machine the container will be deployed, or in what Conda channel the package will be
+# published).
+#
+# A command link
+#
+#   apdo pipeline run 1001
+#
+# would run pipeline with id 1001.
+# And a command like
+#
+#   apdo pipeline list
+#
+# would list out all the pipeline ids known to the CI/CD system.
+#
+export CCL_DEVOPS_SERVICE_ROOT="$( cd "$( dirname $0 )/../" >/dev/null 2>&1 && pwd )"
+
+source ${CCL_DEVOPS_SERVICE_ROOT}/bin/util/apdo-common.sh
+
+# Check that a command  passed as argument $1. Set the error message to use in $ERROR_MSG
+export ERR_MSG="apdo requires a command to be given"
+cli_argument_exists $1
+
+# Dispatch to the interpreter for the right command ($1 is the command)
+case "$1" in
+  pipeline)     ${CCL_DEVOPS_SERVICE_ROOT}/bin/commands/pipeline.sh ${@:2};; # $@ is an array of all arguments, so ${@:2} is a slice from 2nd elt onwards
+  help|--help)  cli_help
+                exit 0;;
+  *)            echo "${ERROR_PROMPT} Invalid apdo command '${1}'" 
+                cli_help
+                exit 1;;
+esac
+

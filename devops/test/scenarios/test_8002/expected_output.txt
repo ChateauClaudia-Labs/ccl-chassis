@@ -1,0 +1,9 @@
+
+---------------------- ABC_pipeline Description 
+
+    Pipeline used to test if 'apdo pipeline describe' works properly
+
+    Apodexi version built:              v0.9.7
+    Packaged as:                        Docker container
+    Deployed to:                        Local Linux host (same host in which pipeline is run)
+    

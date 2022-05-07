@@ -1,0 +1,18 @@
+
+[secrets]
+folder = "/home/work/apodeixi-testdb/secrets"
+
+[knowledge-base]
+knowledge-base-root-folder = "/home/work/apodeixi-testdb/knowledge-base"
+external-collaboration-folder = "/home/work/apodeixi-testdb/share-point"
+
+[organization-settings]
+month-fiscal-year-starts = 6
+organization = "My Corp"
+knowledge-base-areas = ["Production", "Testing Area"]
+
+[cli]
+initializer-classname = "apodeixi.cli.kb_session.KB_Session_Initializer"
+
+[backward-compabitility]
+grandfathered_scoring_cycles   = ["Dec 2020", "FY 21 - 9+3", "March 2021"]
