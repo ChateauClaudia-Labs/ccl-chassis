@@ -38,34 +38,34 @@ These subfolders are called something like `ABC_pipeline` or `1001_pipeline`, wh
 of the pipelines in the album.
 
 Thus, for CCL-DevOps a specific pipeline is uniquely determined once you specify:
-* The pipeline album, through the environment variable `$CCL_DEVOPS_CONFIG_PIPELINE_ALBUM`
+* The pipeline album, through the environment variable `$_CFG__PIPELINE_ALBUM`
 * A pipeline id (such as `1001`) for a valid pipeline in such album (i.e, a valid definition file
-  `$CCL_DEVOPS_CONFIG_PIPELINE_ALBUM/1001_pipeline/pipeline_definition.sh`, if the id is `1001`)
+  `$_CFG__PIPELINE_ALBUM/1001_pipeline/pipeline_definition.sh`, if the id is `1001`)
 * Additionally, the master script for a pipeline that invokes steps from a CCl-DevOps installation must exist in
-  `$CCL_DEVOPS_CONFIG_PIPELINE_ALBUM/1001_pipeline/execute pipeline.sh` (if the id is `1001`)
+  `$_CFG__PIPELINE_ALBUM/1001_pipeline/execute pipeline.sh` (if the id is `1001`)
 
 # Application-specific Configuration
 
 CCL-DevOps is a collection on Bash scripts using a number of environment variables.
 
-Variables whose name starts with `CCL_DEVOPS_...` should be considered part of the public contract between CCL-DevOps
+Variables whose name starts with `_CFG__...` or `SVC__` should be considered part of the public contract between CCL-DevOps
 and the Applications that use them.
 
 Ownership of such variables is as follows:
 
-* Variables whose name starts with `CCL_DEVOPS_CONFIG_...` are owned by the application: each application sets its
+* Variables whose name starts with `_CFG__...` are owned by the application: each application sets its
   value (often in its pipeline definition Bash script), and CCL-DevOps makes use of them. If they refer to paths,
   those paths would typically be in the application installation area.
 
-* Variables whose name starts with `CCL_DEVOPS_SERVICE_...` are owned by the CCL-DevOps: CCL-DevOps sets their
+* Variables whose name starts with `_SVC__...` are owned by the CCL-DevOps: CCL-DevOps sets their
   value and Application scripts make use of them. If they refer to paths those paths would normally be in the
   CCL-DEVOPS installation area.
 
 This is the list of variables that comprise such contract:
 
-* CCL_DEVOPS_SERVICE_ROOT: points to the folder where CCL-DevOps is installed. Auto-configured by CCL-DevOps.
+* _SVC__ROOT: points to the folder where CCL-DevOps is installed. Auto-configured by CCL-DevOps.
 
-* CCL_DEVOPS_CONFIG_PIPELINE_ALBUM: points to the folder where an application's pipeline album resides. Must be set
+* _CFG__PIPELINE_ALBUM: points to the folder where an application's pipeline album resides. Must be set
                                     as an environment variable by the user, before CCL-DevOps runs.
 
 
@@ -79,7 +79,7 @@ You must also set a couple of environment variables:
 
 * Add the bin folder of your CCL-DevOps installation to `$PATH`. For example, 
   `export PATH=/mnt/c/Users/aleja/Documents/Code/chateauclaudia-labs/ccl-chassis/devops/bin:$PATH`
-* `$CCL_DEVOPS_CONFIG_PIPELINE_ALBUM` to identify the folder containing the CCL-DevOps pipeline definitions for your application.
+* `$_CFG__PIPELINE_ALBUM` to identify the folder containing the CCL-DevOps pipeline definitions for your application.
   Typically this would be a folder in your application repo.
 
 Once Docker is running, you may run CCL-DevOps pipeline by, for example:

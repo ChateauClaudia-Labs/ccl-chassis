@@ -4,8 +4,8 @@
 # do a Conda install of an Apodeixi Windows distribution and then running tests on it.
 #
 
-export CCL_DEVOPS_SERVICE_ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
-export PIPELINE_SCRIPTS="${CCL_DEVOPS_SERVICE_ROOT}/src"
+export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
+export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
@@ -101,8 +101,8 @@ fi
 WIN_WORKING_DIR=$(to_windows_path ${WORKING_DIR})
 
 WIN_APODEIXI_TESTDB_GIT_URL="${APODEIXI_TESTDB_GIT_URL}"
-WIN_APODEIXI_GIT_BRANCH="${APODEIXI_GIT_BRANCH}"
-WIN_APODEIXI_VERSION="${APODEIXI_VERSION}"
+WIN__CFG__DEPLOYABLE_GIT_BRANCH="${_CFG__DEPLOYABLE_GIT_BRANCH}"
+WIN__CFG__DEPLOYABLE_VERSION="${_CFG__DEPLOYABLE_VERSION}"
 WIN_ERR_PROMPT="${ERR_PROMPT}"
 WIN_TIMESTAMP="${TIMESTAMP}"
 WIN_INJECTED_CONFIG_DIRECTORY=$(to_windows_path ${TEST_APODEIXI_CONFIG_DIRECTORY})
@@ -117,8 +117,8 @@ echo "WIN_OUTPUT_DIR:                                ${WIN_OUTPUT_DIR}"
 echo "WIN_WORKING_DIR:                               ${WIN_WORKING_DIR}"
 
 echo "WIN_APODEIXI_TESTDB_GIT_URL:                   ${WIN_APODEIXI_TESTDB_GIT_URL}"
-echo "WIN_APODEIXI_GIT_BRANCH:                       ${WIN_APODEIXI_GIT_BRANCH}"
-echo "WIN_APODEIXI_VERSION                           ${WIN_APODEIXI_VERSION}"
+echo "WIN__CFG__DEPLOYABLE_GIT_BRANCH:                       ${WIN__CFG__DEPLOYABLE_GIT_BRANCH}"
+echo "WIN__CFG__DEPLOYABLE_VERSION                           ${WIN__CFG__DEPLOYABLE_VERSION}"
 echo "WIN_ERR_PROMPT:                                ${WIN_ERR_PROMPT}"
 echo "WIN_TIMESTAMP:                                 ${WIN_TIMESTAMP}"
 echo "WIN_INJECTED_CONFIG_DIRECTORY:                 ${WIN_INJECTED_CONFIG_DIRECTORY}"
@@ -157,12 +157,12 @@ echo "      export WIN_APODEIXI_TESTDB_GIT_URL=$(echo $WIN_APODEIXI_TESTDB_GIT_U
 sed -i "1s#^#export WIN_APODEIXI_TESTDB_GIT_URL=$(echo $WIN_APODEIXI_TESTDB_GIT_URL)\n#" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
-echo "      export WIN_APODEIXI_GIT_BRANCH=$(echo $WIN_APODEIXI_GIT_BRANCH)"
-sed -i "1s/^/export WIN_APODEIXI_GIT_BRANCH=$(echo $WIN_APODEIXI_GIT_BRANCH)\n/" ${SCRIPT_TO_RUN}
+echo "      export WIN__CFG__DEPLOYABLE_GIT_BRANCH=$(echo $WIN__CFG__DEPLOYABLE_GIT_BRANCH)"
+sed -i "1s/^/export WIN__CFG__DEPLOYABLE_GIT_BRANCH=$(echo $WIN__CFG__DEPLOYABLE_GIT_BRANCH)\n/" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
-echo "      export WIN_APODEIXI_VERSION=$(echo $WIN_APODEIXI_VERSION)"
-sed -i "1s/^/export WIN_APODEIXI_VERSION=$(echo $WIN_APODEIXI_VERSION)\n/" ${SCRIPT_TO_RUN}
+echo "      export WIN__CFG__DEPLOYABLE_VERSION=$(echo $WIN__CFG__DEPLOYABLE_VERSION)"
+sed -i "1s/^/export WIN__CFG__DEPLOYABLE_VERSION=$(echo $WIN__CFG__DEPLOYABLE_VERSION)\n/" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
 echo "      export WIN_ERR_PROMPT='$(echo $WIN_ERR_PROMPT)'"
@@ -183,7 +183,7 @@ abort_on_error
 echo
 echo "${INFO_PROMPT} ... done preparing the script that must be run in virtual environment"
 echo
-echo "${INFO_PROMPT} Attempting to run tests for Apodeixi branch ${APODEIXI_GIT_BRANCH} in Windows Conda virtual environment..."
+echo "${INFO_PROMPT} Attempting to run tests for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
 echo "${INFO_PROMPT}            (this might take a 4-5 minutes...)"
 
 # When we run the script, we must refer to it by a Windows path, even if above we manipulated it in Linux and hence have

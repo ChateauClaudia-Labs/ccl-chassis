@@ -24,9 +24,9 @@
 #
 # would list out all the pipeline ids known to the CI/CD system.
 #
-export CCL_DEVOPS_SERVICE_ROOT="$( cd "$( dirname $0 )/../" >/dev/null 2>&1 && pwd )"
+export _SVC__ROOT="$( cd "$( dirname $0 )/../" >/dev/null 2>&1 && pwd )"
 
-source ${CCL_DEVOPS_SERVICE_ROOT}/bin/util/apdo-common.sh
+source ${_SVC__ROOT}/bin/util/apdo-common.sh
 
 # Check that a command  passed as argument $1. Set the error message to use in $ERROR_MSG
 export ERR_MSG="apdo requires a command to be given"
@@ -34,7 +34,7 @@ cli_argument_exists $1
 
 # Dispatch to the interpreter for the right command ($1 is the command)
 case "$1" in
-  pipeline)     ${CCL_DEVOPS_SERVICE_ROOT}/bin/commands/pipeline.sh ${@:2};; # $@ is an array of all arguments, so ${@:2} is a slice from 2nd elt onwards
+  pipeline)     ${_SVC__ROOT}/bin/commands/pipeline.sh ${@:2};; # $@ is an array of all arguments, so ${@:2} is a slice from 2nd elt onwards
   help|--help)  cli_help
                 exit 0;;
   *)            echo "${ERROR_PROMPT} Invalid apdo command '${1}'" 

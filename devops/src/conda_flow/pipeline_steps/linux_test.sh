@@ -46,8 +46,8 @@ if [ ! -d ${DISTRIBUTION_FOLDER} ]
         echo $error                             >/dev/stderr
         exit 1
 fi
-echo "[A6I_TEST_CONTAINER] Looking for a file apodeixi-${APODEIXI_VERSION}* in  ${DISTRIBUTION_FOLDER}" &>> ${TEST_LOG}
-export APODEIXI_DISTRIBUTION=$(echo $(ls ${DISTRIBUTION_FOLDER} | grep "apodeixi-${APODEIXI_VERSION}") | awk '{print $1}') \
+echo "[A6I_TEST_CONTAINER] Looking for a file ${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}* in  ${DISTRIBUTION_FOLDER}" &>> ${TEST_LOG}
+export APODEIXI_DISTRIBUTION=$(echo $(ls ${DISTRIBUTION_FOLDER} | grep "${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}") | awk '{print $1}') \
                 1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 if [ -z ${APODEIXI_DISTRIBUTION} ]
@@ -99,7 +99,7 @@ abort_testrun_on_error
 echo                                                                                                        &>> ${TEST_LOG}
 # At this point the virtual environment if pretty empty - it only has Apodeixi, but lacks Python and lacks dependencies.
 # Both will be brought in if we install python
-echo "[A6I_TEST_CONTAINER]  ... now installing Apodeixi dependencies..."                                    &>> ${TEST_LOG}
+echo "[A6I_TEST_CONTAINER]  ... now installing ${_CFG__DEPLOYABLE} dependencies..."                                    &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 yes " y" | conda install -n test-apo-bld python                                                                             &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
@@ -111,12 +111,12 @@ echo                                                                            
 
 echo "[A6I_TEST_CONTAINER] =========== Installing test database..."                                         &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
-echo "[A6I_TEST_CONTAINER]  ...git clone ${APODEIXI_TESTDB_GIT_URL} --branch ${APODEIXI_GIT_BRANCH}"        &>> ${TEST_LOG}
+echo "[A6I_TEST_CONTAINER]  ...git clone ${APODEIXI_TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH}"        &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER]              (current directory for git clone is $(pwd)"                         &>> ${TEST_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action takes
 SECONDS=0
 echo                                                                                            &>> ${TEST_LOG}
-git clone  ${APODEIXI_TESTDB_GIT_URL} --branch ${APODEIXI_GIT_BRANCH}                           1>> ${TEST_LOG} 2>/tmp/error
+git clone  ${APODEIXI_TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH}                           1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 
 # Compute how long we took in this script
@@ -128,7 +128,6 @@ echo &>> ${TEST_LOG}
 
 echo "[A6I_TEST_CONTAINER] =========== Working area and Python version"                                     &>> ${TEST_LOG}
 echo &>> ${TEST_LOG}
-#cd /home/work/apodeixi &>> ${TEST_LOG}
 
 # Need to work out the Python distribution so we can find the apodeixi folder where to run the tests. 
 # E.g., if Python 3.10.4 was installed, then apodeixi would have been installed in 
@@ -151,7 +150,7 @@ major_version=$(echo $full_version | awk -F. '{print $1}')                      
 minor_version=$(echo $full_version | awk -F. '{print $2}')                          &>> ${TEST_LOG}
 python_dist="python${major_version}.${minor_version}"                               &>> ${TEST_LOG}
 
-cd /home/anaconda3/envs/test-apo-bld/lib/${python_dist}/site-packages/apodeixi      1>> ${TEST_LOG} 2>/tmp/error
+cd /home/anaconda3/envs/test-apo-bld/lib/${python_dist}/site-packages/${_CFG__DEPLOYABLE}      1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 echo                                                                                &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER] Current directory is $(pwd)"                             &>> ${TEST_LOG}

@@ -14,8 +14,8 @@
 #
 #               docker run -it --rm apodeixi /bin/bash
 
-export CCL_DEVOPS_SERVICE_ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
-export PIPELINE_SCRIPTS="${CCL_DEVOPS_SERVICE_ROOT}/src"
+export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
+export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
@@ -44,7 +44,7 @@ SECONDS=0
 # Therefore, we create a working folder to be used as the "context folder", and move into it any other files that are
 # needed in the Docker process. That way they are all in 1 place.
 export APODEIXI_DIST="${PIPELINE_STEP_INTAKE}/dist"
-export PROVISIONING_DOCKERFILE="${CCL_DEVOPS_SERVICE_ROOT}/src/docker_flow/docker/apodeixi_server/Dockerfile"
+export PROVISIONING_DOCKERFILE="${_SVC__ROOT}/src/docker_flow/docker/apodeixi_server/Dockerfile"
 export WORK_FOLDER="${PIPELINE_STEP_OUTPUT}/provisioning_work"
 if [ ! -d "${WORK_FOLDER}" ]; then
     mkdir ${WORK_FOLDER}
@@ -55,7 +55,7 @@ cp ${PROVISIONING_DOCKERFILE} ${WORK_FOLDER} 2>/tmp/error
 abort_on_error
 
 echo "${INFO_PROMPT} Copying Apodeixi distribution to work folder"
-cp ${APODEIXI_DIST}/apodeixi-${APODEIXI_VERSION}-py3-none-any.whl ${WORK_FOLDER} 2>/tmp/error
+cp ${APODEIXI_DIST}/${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}-py3-none-any.whl ${WORK_FOLDER} 2>/tmp/error
 abort_on_error
 
 # pip does not come with the Ubuntu python distribution, unfortunately, so we need to download this module to later help us get
@@ -70,14 +70,15 @@ echo "=============== Output from 'curl https://bootstrap.pypa.io/get-pip.py -o 
 echo                                                                            &>> ${PROVISIONING_LOG}
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py                         &>> ${PROVISIONING_LOG}
 
-echo "${INFO_PROMPT} About to build Apodeixi image '${APODEIXI_IMAGE}'..."
+echo "${INFO_PROMPT} About to build Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'..."
 echo                                                                            &>> ${PROVISIONING_LOG}
-echo "=============== Output from building Apodeixi image '${APODEIXI_IMAGE}'"  &>> ${PROVISIONING_LOG}
+echo "=============== Output from building Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'"  &>> ${PROVISIONING_LOG}
 echo                                                                            &>> ${PROVISIONING_LOG}
 docker build --build-arg UBUNTU_IMAGE \
             --build-arg PYTHON_VERSION \
-            --build-arg APODEIXI_VERSION \
-            -t ${APODEIXI_IMAGE} ${WORK_FOLDER} 1>> ${PROVISIONING_LOG} 2>/tmp/error
+            --build-arg _CFG__DEPLOYABLE_VERSION \
+            --build-arg _CFG__DEPLOYABLE \
+            -t ${_CFG__DEPLOYABLE_IMAGE} ${WORK_FOLDER} 1>> ${PROVISIONING_LOG} 2>/tmp/error
 abort_on_error
 
 # Compute how long we took in this script

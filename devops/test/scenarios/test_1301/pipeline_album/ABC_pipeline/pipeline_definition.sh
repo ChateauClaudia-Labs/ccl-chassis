@@ -7,7 +7,7 @@ pipeline_description() {
     echo "
     Pipeline used during test of the testrun pipeline step
 
-    Apodexi version built:              ${APODEIXI_GIT_BRANCH}
+    Apodexi version built:              ${_CFG__DEPLOYABLE_GIT_BRANCH}
     Packaged as:                        Docker container from image 'apodeixi:test_1101'
     Deployed to:                        Local Linux host (same host in which pipeline is run)
     "
@@ -23,8 +23,8 @@ export PYTHON_VERSION="3.9"
 export UBUNTU_PYTHON_PACKAGE="python3.9"
 
 # Release version that is to be built
-export APODEIXI_GIT_BRANCH="v0.9.8"
-export APODEIXI_VERSION="0.9.8"
+export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.8"
+export _CFG__DEPLOYABLE_VERSION="0.9.8"
 
 export APODEIXI_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"
 
@@ -36,7 +36,7 @@ export A6I_BUILD_SERVER="a6i-build-server"
 # Defines the name (& tag) for the Apodeixi image to be created by the pipeline. If there is no tag, Docker will
 # by default put a tag of ":latest"
 #
-APODEIXI_IMAGE="apodeixi:test_1101"
+_CFG__DEPLOYABLE_IMAGE="apodeixi:test_1101"
 
 # Defines what Apodeixi environment is being mounted in the Apodeixi container by this pipeline
 #
@@ -54,4 +54,4 @@ APODEIXI_IMAGE="apodeixi:test_1101"
 #
 export RUNNING_BATS=1
 
-export TEST_APODEIXI_CONFIG_DIRECTORY=${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}/apodeixi_testdb_config
+export TEST_APODEIXI_CONFIG_DIRECTORY=${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/apodeixi_testdb_config

@@ -4,12 +4,12 @@
 # do a conda-build for a given conda recipe for Apodeixi.
 #
 
-export CCL_DEVOPS_SERVICE_ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
-export PIPELINE_SCRIPTS="${CCL_DEVOPS_SERVICE_ROOT}/src"
+export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
+export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
-export CONDA_RECIPE_DIR=${PIPELINE_SCRIPTS}/conda_flow/conda_recipes/
+export CONDA_RECIPE_DIR=${_CFG__PIPELINE_ALBUM}/../src/conda_flow/conda_recipes/
 
 echo
 echo "${INFO_PROMPT} ---------------- Starting Windows conda build step"
@@ -56,7 +56,7 @@ fi
 
 WIN_ERR_PROMPT="${ERR_PROMPT}"
 WIN_TIMESTAMP="${TIMESTAMP}"
-WIN_CONDA_RECIPE="${CONDA_RECIPE}"
+WIN_CONDA_RECIPE="${_CFG__CONDA_RECIPE}"
 WIN_CONDA_RECIPE_DIR=$(to_windows_path ${CONDA_RECIPE_DIR})
 WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE="${REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE}"
 
@@ -123,7 +123,7 @@ abort_on_error
 echo
 echo "${INFO_PROMPT} ... done preparing the script that must be run in virtual environment"
 echo
-echo "${INFO_PROMPT} Attempting to run conda build for Apodeixi branch ${APODEIXI_GIT_BRANCH} in Windows Conda virtual environment..."
+echo "${INFO_PROMPT} Attempting to run conda build for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
 echo "${INFO_PROMPT}            (this might take a 5-10 minutes...)"
 
 # When we run the script, we must refer to it by a Windows path, even if above we manipulated it in Linux and hence have

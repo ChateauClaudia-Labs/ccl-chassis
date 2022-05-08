@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-export CCL_DEVOPS_SERVICE_ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
+export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
 
-export PIPELINE_SCRIPTS="${CCL_DEVOPS_SERVICE_ROOT}/src"
+export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
@@ -14,19 +14,19 @@ export REMOVE_CONTAINER_WHEN_DONE="--rm"
 echo
 echo "${INFO_PROMPT} ---------------- Starting Linux conda build step"
 echo
-echo "${INFO_PROMPT} CONDA_RECIPE               =   ${CONDA_RECIPE}"
+echo "${INFO_PROMPT} CONDA_RECIPE               =   ${_CFG__CONDA_RECIPE}"
 echo "${INFO_PROMPT} A6I_CONDABUILD_SERVER      =   ${A6I_CONDABUILD_SERVER}"
 
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
 
-export CONDA_RECIPE_DIR=${PIPELINE_SCRIPTS}/conda_flow/conda_recipes/${CONDA_RECIPE}
+export CONDA_RECIPE_DIR=${_CFG__PIPELINE_ALBUM}/../src/conda_flow/conda_recipes/${_CFG__CONDA_RECIPE}
 
 echo
 echo "${INFO_PROMPT} About to start condabuild server container..."
 docker run ${REMOVE_CONTAINER_WHEN_DONE} \
             --hostname "APO-CONDABUILDER-${TIMESTAMP}" \
-            -e TIMESTAMP=${TIMESTAMP} -e APODEIXI_VERSION=${APODEIXI_VERSION} \
+            -e TIMESTAMP=${TIMESTAMP} -e _CFG__DEPLOYABLE_VERSION=${_CFG__DEPLOYABLE_VERSION} \
             -e HOST_CONDA_RECIPE_DIR=${CONDA_RECIPE_DIR} \
             -v ${PIPELINE_STEP_OUTPUT}:/home/output \
             -v ${PIPELINE_SCRIPTS}/conda_flow/pipeline_steps:/home/scripts \
@@ -41,7 +41,7 @@ export CONDABUILD_CONTAINER=$(docker ps -q -l) 2>/tmp/error
 abort_on_error
 
 echo "${INFO_PROMPT} Conda build server container ${CONDABUILD_CONTAINER} up and running..."
-echo "${INFO_PROMPT} ...attempting to build Apodeixi branch ${APODEIXI_GIT_BRANCH}..."
+echo "${INFO_PROMPT} ...attempting to build Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH}..."
 
 echo "${INFO_PROMPT} ...building Apodeixi using container ${CONDABUILD_CONTAINER}... (this will take a 4-5 minutes)"
 echo

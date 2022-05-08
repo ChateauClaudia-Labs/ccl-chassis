@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-export CCL_DEVOPS_SERVICE_ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
+export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
 
-export PIPELINE_SCRIPTS="${CCL_DEVOPS_SERVICE_ROOT}/src"
+export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
@@ -13,6 +13,8 @@ export REMOVE_CONTAINER_WHEN_DONE="--rm"
 #
 echo
 echo "${INFO_PROMPT} ---------------- Starting build step"
+echo
+echo "${INFO_PROMPT} Deployable: ${_CFG__DEPLOYABLE}"
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
 
@@ -29,7 +31,7 @@ if [ ! -z ${MOUNT_APODEIXI_GIT_PROJECT} ]
                 echo "${ERR_PROMPT} Aborting build..."
                 exit 1
         fi
-        export APODEIXI_URL_CLONED_BY_CONTAINER="/home/apodeixi"
+        export APODEIXI_URL_CLONED_BY_CONTAINER="/home/${_CFG__DEPLOYABLE}"
         export GIT_REPO_MOUNT_DOCKER_OPTION="-v ${APODEIXI_GIT_URL}:${APODEIXI_URL_CLONED_BY_CONTAINER}"
     else
         echo "${INFO_PROMPT}        => from this URL:"
@@ -41,7 +43,8 @@ echo
 echo "${INFO_PROMPT} About to start build server container..."
 docker run ${REMOVE_CONTAINER_WHEN_DONE} \
             --hostname "APO-BUILDER-${TIMESTAMP}" \
-            -e TIMESTAMP=${TIMESTAMP} -e APODEIXI_GIT_BRANCH=${APODEIXI_GIT_BRANCH} \
+            -e TIMESTAMP=${TIMESTAMP} -e _CFG__DEPLOYABLE_GIT_BRANCH=${_CFG__DEPLOYABLE_GIT_BRANCH} \
+            -e _CFG__DEPLOYABLE=${_CFG__DEPLOYABLE} \
             -e APODEIXI_GIT_URL=${APODEIXI_URL_CLONED_BY_CONTAINER} \
             -v ${PIPELINE_STEP_OUTPUT}:/home/output -v ${PIPELINE_SCRIPTS}/docker_flow/pipeline_steps:/home/scripts \
             ${GIT_REPO_MOUNT_DOCKER_OPTION} \
@@ -55,7 +58,7 @@ export BUILD_CONTAINER=$(docker ps -q -l) 2>/tmp/error
 abort_on_error
 
 echo "${INFO_PROMPT} Build server container ${BUILD_CONTAINER} up and running..."
-echo "${INFO_PROMPT} ...attempting to build Apodeixi branch ${APODEIXI_GIT_BRANCH}..."
+echo "${INFO_PROMPT} ...attempting to build Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH}..."
 
 echo "${INFO_PROMPT} ...will build Apodeixi using container ${BUILD_CONTAINER}..."
 docker exec ${BUILD_CONTAINER} /bin/bash /home/scripts/build.sh 2>/tmp/error

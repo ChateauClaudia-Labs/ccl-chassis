@@ -21,7 +21,7 @@ _test_case_setup() {
     # For tests, use a test-specific folder for inputs. In particular, for the pipeline album, 
     # instead of the default "production" album meant for "real" pipelines
     export SCENARIO_INPUTS_FOLDER=${PROJECT_ROOT}/test/scenarios/${TESTCASE_ID}
-    export CCL_DEVOPS_CONFIG_PIPELINE_ALBUM=${SCENARIO_INPUTS_FOLDER}/pipeline_album
+    export _CFG__PIPELINE_ALBUM=${SCENARIO_INPUTS_FOLDER}/pipeline_album
 
     # Folder where pipeline steps write their output to
     export PIPELINE_STEP_OUTPUT="${TESTCASE_OUTPUT_DIR}/pipeline_run"

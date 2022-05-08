@@ -33,16 +33,16 @@ cli_argument_exists() {
 # defining the pipeline ('pipeline_definition.sh'). This definition is interpreted by Apodeixi DevOps' code to run the 
 # the generic pipeline steps but as configured specifically for the pipeline idenfified by <ID>
 #
-# So we require that the caller has set the variable ${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}, we use that; else we default it
+# So we require that the caller has set the variable ${_CFG__PIPELINE_ALBUM}, we use that; else we default it
 #
-if [ -z "${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}" ]
+if [ -z "${_CFG__PIPELINE_ALBUM}" ]
     then
-        echo "${ERROR_PROMPT} Command can't be processed because environment variable 'CCL_DEVOPS_CONFIG_PIPELINE_ALBUM' is not set"
+        echo "${ERROR_PROMPT} Command can't be processed because environment variable '_CFG__PIPELINE_ALBUM' is not set"
         exit 1
 fi
 
 
-# Check that there is a pipeline for this id. $1 should be ${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM} and $2 should be ${PIPELINE_NAME}
+# Check that there is a pipeline for this id. $1 should be ${_CFG__PIPELINE_ALBUM} and $2 should be ${PIPELINE_NAME}
 cli_pipeline_exists() {
   [ ! -d "${1}/${2}" ] && echo \
   && echo "${ERROR_PROMPT} '${2}' is not a valid ID for a pipeline" \
@@ -51,7 +51,7 @@ cli_pipeline_exists() {
   && exit 1
 }
 
-# Check that pipeline folder includes a pipeline definition. $1 should be ${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM} and $2 should be ${PIPELINE_NAME}
+# Check that pipeline folder includes a pipeline definition. $1 should be ${_CFG__PIPELINE_ALBUM} and $2 should be ${PIPELINE_NAME}
 cli_pipeline_def_exists() {
   [ ! -f "${1}/${2}/pipeline_definition.sh" ] && echo \
   && echo "${ERROR_PROMPT} '${2}' is improperly configured:" \
@@ -61,7 +61,7 @@ cli_pipeline_def_exists() {
   && exit 1
 }
 
-# Check that pipeline folder includes the script that runs the pipeline. $1 should be ${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM} and $2 should be ${PIPELINE_NAME}
+# Check that pipeline folder includes the script that runs the pipeline. $1 should be ${_CFG__PIPELINE_ALBUM} and $2 should be ${PIPELINE_NAME}
 cli_pipeline_run_exists() {
   [ ! -f "${1}/${2}/execute_pipeline.sh" ] && echo \
   && echo "${ERROR_PROMPT} '${2}' is improperly configured:" \

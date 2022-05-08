@@ -2,9 +2,10 @@ ARG UBUNTU_IMAGE
 FROM ${UBUNTU_IMAGE}
 RUN apt update && apt upgrade -y
 
-ARG APODEIXI_VERSION
+ARG _CFG__DEPLOYABLE_VERSION
+ARG _CFG__DEPLOYABLE
 
-COPY ./apodeixi-${APODEIXI_VERSION}-py3-none-any.whl /home/apodeixi/
+COPY ./${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}-py3-none-any.whl /home/${_CFG__DEPLOYABLE}/
 
 # get-pip.py is needed so that we can dowload a version of pip that is compatible with the version of Python we are installing
 COPY ./get-pip.py /home/tmp/
@@ -28,7 +29,7 @@ RUN rm -f /etc/localtime && ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/
 RUN apt install -y python${PYTHON_VERSION}-distutils
 RUN cd /home/tmp/ && python get-pip.py
 
-RUN cd /home/apodeixi && pip install apodeixi-${APODEIXI_VERSION}-py3-none-any.whl
+RUN cd /home/${_CFG__DEPLOYABLE} && pip install ${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}-py3-none-any.whl
 
 # As explained in https://devopscube.com/keep-docker-container-running/, to ensure that the build server keeps running
 # after running build script, in case that we want to debug it, we must have an entrypoint.

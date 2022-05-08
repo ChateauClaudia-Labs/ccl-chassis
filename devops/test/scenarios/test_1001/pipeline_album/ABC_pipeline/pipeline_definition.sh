@@ -6,7 +6,7 @@
 pipeline_description() {
     echo "
     Pipeline used for test purposes only
-    Apodexi version built:              ${APODEIXI_GIT_BRANCH}
+    Apodexi version built:              ${_CFG__DEPLOYABLE_GIT_BRANCH}
     Packaged as:                        Docker container
     Deployed to:                        Local Linux host (same host in which pipeline is run)
     "
@@ -14,15 +14,15 @@ pipeline_description() {
 
 # Single-line description suitable for use when listing multiple pipelines
 pipeline_short_description() {
-    echo "Used to test deploying Apodeixi ${APODEIXI_GIT_BRANCH} as a Linux container locally"
+    echo "Used to test deploying Apodeixi ${_CFG__DEPLOYABLE_GIT_BRANCH} as a Linux container locally"
 }
 
 export UBUNTU_IMAGE="ubuntu:20.04"
 export PYTHON_VERSION="3.9"
 
 # Release version that is to be built
-export APODEIXI_GIT_BRANCH="v0.9.8"
-export APODEIXI_VERSION="0.9.8"
+export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.8"
+export _CFG__DEPLOYABLE_VERSION="0.9.8"
 
 export APODEIXI_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"
 

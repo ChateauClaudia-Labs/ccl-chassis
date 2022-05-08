@@ -11,8 +11,8 @@
 #
 #               sudo service docker start
 #
-export CCL_DEVOPS_SERVICE_ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
-export PIPELINE_SCRIPTS="${CCL_DEVOPS_SERVICE_ROOT}/src"
+export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
+export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
@@ -33,7 +33,7 @@ export REMOVE_CONTAINER_WHEN_DONE="--rm"
 
 # Check that Apodeixi config file exists
 [ ! -f ${APODEIXI_CONFIG_DIRECTORY}/apodeixi_config.toml ] && echo \
-    && echo "${ERR_PROMPT} '${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
+    && echo "${ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
     && echo "${ERR_PROMPT} It expects Apodeixi config file, which doesn't exist:" \
     && echo "${ERR_PROMPT}     ${APODEIXI_CONFIG_DIRECTORY}/apodeixi_config.toml" \
     && echo \
@@ -41,19 +41,19 @@ export REMOVE_CONTAINER_WHEN_DONE="--rm"
 
 # Check that mounted volumes for the Apodeixi environment exist
 [ ! -d ${SECRETS_FOLDER} ] && echo \
-        && echo "${ERR_PROMPT} '${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
+        && echo "${ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
         && echo "${ERR_PROMPT} It expects a non-existent folder called "\
         && echo "    ${SECRETS_FOLDER}." \
         && echo \
         && exit 1
 [ ! -d ${COLLABORATION_AREA} ] && echo \
-        && echo "${ERR_PROMPT} '${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
+        && echo "${ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
         && echo "${ERR_PROMPT} It expects a non-existent a folder called " \
         && echo "    ${COLLABORATION_AREA}." \
         && echo \
         && exit 1
 [ ! -d ${KNOWLEDGE_BASE_FOLDER} ] && echo \
-    && echo "${ERR_PROMPT} '${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
+    && echo "${ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
     && echo "${ERR_PROMPT} It expects a non-existent a folder called " \
     && echo "    ${KNOWLEDGE_BASE_FOLDER}." \
         && echo \
@@ -66,7 +66,7 @@ docker run ${REMOVE_CONTAINER_WHEN_DONE} \
             -e APODEIXI_CONFIG_DIRECTORY="/home/apodeixi/config" \
             -v ${SECRETS_FOLDER}:/home/apodeixi/secrets -v ${COLLABORATION_AREA}:/home/apodeixi/collaboration_area  \
             -v ${KNOWLEDGE_BASE_FOLDER}:/home/apodeixi/kb -v ${APODEIXI_CONFIG_DIRECTORY}:/home/apodeixi/config \
-            ${APODEIXI_IMAGE} & 2>/tmp/error # run in the background 
+            ${_CFG__DEPLOYABLE_IMAGE} & 2>/tmp/error # run in the background 
 abort_on_error
 
 echo "${INFO_PROMPT} ...waiting for Apodeixi to start..."
@@ -79,12 +79,12 @@ echo "${INFO_PROMPT} Apodeixi container ${APODEIXI_CONTAINER} up and running..."
 # Run a couple of sanity checks that container is running fine and that the database was correctly mounted
 #
 command="apo --version && apo get assertions"
-echo "[A6I_CONTAINER] Will verify that apodeixi is up and running by executing this command:"   &>> ${DEPLOYMENT_LOG}
+echo "[A6I_CONTAINER] Will verify that ${_CFG__DEPLOYABLE} is up and running by executing this command:"   &>> ${DEPLOYMENT_LOG}
 echo "[A6I_CONTAINER]               $command"                                                   &>> ${DEPLOYMENT_LOG} 
 echo                                                                                            &>> ${DEPLOYMENT_LOG}
 docker exec ${APODEIXI_CONTAINER} /bin/bash -c "$command"                                       &>> ${DEPLOYMENT_LOG} 2>/tmp/error
 abort_on_error
-echo "${INFO_PROMPT} Verification that apodeixi is running properly gave this output when running the command"
+echo "${INFO_PROMPT} Verification that ${_CFG__DEPLOYABLE} is running properly gave this output when running the command"
 echo "${INFO_PROMPT}                    $command"
 echo "${INFO_PROMPT}    (output cut to last 10 lines)"
 echo
@@ -96,8 +96,8 @@ tail -n 10 ${DEPLOYMENT_LOG}
 #       Bats then gets unblocked and finishes up the test
 if [ ! -z ${RUNNING_BATS} ]
     then
-        echo "${INFO_PROMPT} ...stopping apodeixi container..."
-        echo "${INFO_PROMPT} ...stopped apodeixi container $(docker stop ${APODEIXI_CONTAINER})"
+        echo "${INFO_PROMPT} ...stopping ${_CFG__DEPLOYABLE} container..."
+        echo "${INFO_PROMPT} ...stopped ${_CFG__DEPLOYABLE} container $(docker stop ${APODEIXI_CONTAINER})"
         echo
 fi
 

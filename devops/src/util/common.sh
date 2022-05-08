@@ -3,7 +3,7 @@
 # This script has some common settings and logic applicable to all pipeline steps.
 # It is expected to be sourced by each pipeline step's request script. 
 # It requires that:
-#       1. ${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM} be set up prior to sourcing this script.
+#       1. ${_CFG__PIPELINE_ALBUM} be set up prior to sourcing this script.
 
 # Used to "catch exceptions", kind of, in the Bash programming environment.
 # Requirements:
@@ -51,11 +51,11 @@ export PIPELINE_NAME="$1_pipeline" # For example, '1001_pipeline'. This is a fol
 # defining the pipeline ('pipeline_definition.sh'). This definition is interpreted by Apodeixi DevOps' code to run the 
 # the generic pipeline steps but as configured specifically for the pipeline idenfified by <ID>
 #
-# So we require that the caller has set the variable ${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}, we use that; else we default it
+# So we require that the caller has set the variable ${_CFG__PIPELINE_ALBUM}, we use that; else we default it
 #
-if [ -z "${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}" ]
+if [ -z "${_CFG__PIPELINE_ALBUM}" ]
     then
-        echo "${ERROR_PROMPT} Command can't be processed because environment variable 'CCL_DEVOPS_CONFIG_PIPELINE_ALBUM' is not set"
+        echo "${ERROR_PROMPT} Command can't be processed because environment variable '_CFG__PIPELINE_ALBUM' is not set"
         exit 1
 fi
 
@@ -76,8 +76,8 @@ if [ -z "$RUN_TIMESTAMP" ]
 fi
 
 # Check pipeline album contains a pipeline with the given ID
-  [ ! -d "${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}" ] && echo \
-  && echo "${ERR_PROMPT} '${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}' does not exist" \
+  [ ! -d "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}" ] && echo \
+  && echo "${ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' does not exist" \
   && echo \
   && exit 1
 
@@ -87,10 +87,10 @@ fi
 # inject it to be a sub-area of test output's area), but if it has not been injected, we default it.
 if [ -z "${PIPELINE_STEP_OUTPUT}" ]
     then
-        export PIPELINE_STEP_OUTPUT=${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}/output/${RUN_TIMESTAMP}_pipeline_run
-        if [ ! -d "${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}/output" ]
+        export PIPELINE_STEP_OUTPUT=${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/output/${RUN_TIMESTAMP}_pipeline_run
+        if [ ! -d "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/output" ]
             then
-                mkdir "${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}/output"
+                mkdir "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/output"
         fi
 fi
 
@@ -128,8 +128,8 @@ echo "${INFO_PROMPT} PIPELINE_STEP_OUTPUT = ${PIPELINE_STEP_OUTPUT}"
 echo
 
 # Check pipeline folder in the album contains a definition script
-  [ ! -f "${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}/pipeline_definition.sh" ] && echo \
-  && echo "${ERR_PROMPT} '${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
+  [ ! -f "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/pipeline_definition.sh" ] && echo \
+  && echo "${ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
   && echo "${ERR_PROMPT} It should contain a 'pipeline_definition'.sh file " \
   && echo "with two functions called 'pipeline_description' and 'pipeline_short_description'" \
   && echo \
@@ -137,7 +137,7 @@ echo
 
 # Get the pipeline definition (i.e., set environment variables and initialize functions as per the definition for
 # the pipeline with id $1
-source "${CCL_DEVOPS_CONFIG_PIPELINE_ALBUM}/${PIPELINE_NAME}/pipeline_definition.sh"
+source "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/pipeline_definition.sh"
 
 # Check that Docker is running
 docker stats --no-stream 2>/tmp/error 1>/dev/null
@@ -160,9 +160,9 @@ else
     echo "${INFO_PROMPT} Verified that Docker daemon is running"
 fi
 
-if [ ! -z ${APODEIXI_IMAGE} ]
+if [ ! -z ${_CFG__DEPLOYABLE_IMAGE} ]
     then
         echo
-        echo "${INFO_PROMPT} Will be working with Apodeixi image '${APODEIXI_IMAGE}'"
+        echo "${INFO_PROMPT} Will be working with Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'"
         echo
 fi

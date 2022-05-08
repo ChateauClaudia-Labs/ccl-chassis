@@ -20,8 +20,8 @@
 
 # Apodeixi environment settings
 
-export CCL_DEVOPS_SERVICE_ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
-export PIPELINE_SCRIPTS="${CCL_DEVOPS_SERVICE_ROOT}/src"
+export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
+export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
@@ -81,7 +81,7 @@ SECONDS=0
 #       as explained in https://stackoverflow.com/questions/6697753/difference-between-single-and-double-quotes-in-bash
 #sed -i "s${SED_DELIM}${LOCAL_TEST_DB_IN_WINDOWS}${SED_DELIM}/home/apodeixi-testdb${SED_DELIM}g" ${TMP_CONFIG_DIRECTORY}/apodeixi_config.toml
 
-echo "${INFO_PROMPT} About to start Apodeixi test container..."
+echo "${INFO_PROMPT} About to start ${_CFG__DEPLOYABLE} test container..."
 
 # Comment this environment variable if we want to keep the test container (e.g., to inspect problems) after this script ends
 export REMOVE_CONTAINER_WHEN_DONE=1
@@ -111,8 +111,9 @@ fi
 #   - $APODEIXI_CONFIG_DIRECTORY environment varialbe is not needed for tests, but saves setup if we have to 
 #       debug within the container
 #
-docker run  -e TIMESTAMP=${TIMESTAMP} -e APODEIXI_GIT_BRANCH=${APODEIXI_GIT_BRANCH} \
+docker run  -e TIMESTAMP=${TIMESTAMP} -e _CFG__DEPLOYABLE_GIT_BRANCH=${_CFG__DEPLOYABLE_GIT_BRANCH} \
             -e APODEIXI_TESTDB_GIT_URL=${APODEIXI_TESTDB_URL_CLONED_BY_CONTAINER} \
+            -e _CFG__DEPLOYABLE=${_CFG__DEPLOYABLE} \
             -e INJECTED_CONFIG_DIRECTORY=/home/apodeixi_testdb_config \
             -e APODEIXI_CONFIG_DIRECTORY=/home/apodeixi_testdb_config \
             -e UBUNTU_PYTHON_PACKAGE=${UBUNTU_PYTHON_PACKAGE} \
@@ -120,7 +121,7 @@ docker run  -e TIMESTAMP=${TIMESTAMP} -e APODEIXI_GIT_BRANCH=${APODEIXI_GIT_BRAN
             -v ${PIPELINE_STEP_OUTPUT}:/home/output -v ${PIPELINE_SCRIPTS}/docker_flow/pipeline_steps:/home/scripts \
             -v $TEST_APODEIXI_CONFIG_DIRECTORY:/home/apodeixi_testdb_config \
             ${GIT_REPO_MOUNT_DOCKER_OPTION} \
-            ${APODEIXI_IMAGE} & 2>/tmp/error # run in the background so rest of this script can proceed
+            ${_CFG__DEPLOYABLE_IMAGE} & 2>/tmp/error # run in the background so rest of this script can proceed
 abort_on_error
 
 echo "${INFO_PROMPT} ...waiting for Apodeixi test container to start..."
@@ -132,7 +133,7 @@ abort_on_error
 echo
 echo "${INFO_PROMPT} Apodeixi test container ${APODEIXI_CONTAINER} up and running..."
 echo
-echo "${INFO_PROMPT} Attempting to run tests for Apodeixi branch ${APODEIXI_GIT_BRANCH} using container ${APODEIXI_CONTAINER}..."
+echo "${INFO_PROMPT} Attempting to run tests for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} using container ${APODEIXI_CONTAINER}..."
 echo "${INFO_PROMPT}            (this might take a 1-2 minutes...)"
 
 docker exec ${APODEIXI_CONTAINER} /bin/bash /home/scripts/testrun.sh 2>/tmp/error
