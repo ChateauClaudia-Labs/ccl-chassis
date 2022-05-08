@@ -26,7 +26,7 @@ export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
 echo
-echo "${INFO_PROMPT} ---------------- Starting testrun step"
+echo "${_SVC__INFO_PROMPT} ---------------- Starting testrun step"
 echo
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
@@ -81,76 +81,56 @@ SECONDS=0
 #       as explained in https://stackoverflow.com/questions/6697753/difference-between-single-and-double-quotes-in-bash
 #sed -i "s${SED_DELIM}${LOCAL_TEST_DB_IN_WINDOWS}${SED_DELIM}/home/apodeixi-testdb${SED_DELIM}g" ${TMP_CONFIG_DIRECTORY}/apodeixi_config.toml
 
-echo "${INFO_PROMPT} About to start ${_CFG__DEPLOYABLE} test container..."
+echo "${_SVC__INFO_PROMPT} About to start ${_CFG__DEPLOYABLE} test container..."
 
 # Comment this environment variable if we want to keep the test container (e.g., to inspect problems) after this script ends
 export REMOVE_CONTAINER_WHEN_DONE=1
 
-echo "${INFO_PROMPT} ... Determining approach for how container can access the GIT testdb repo:"
-if [ ! -z ${MOUNT_APODEIXI_GIT_PROJECT} ]
-    then
-        echo "${INFO_PROMPT}        = by mounting this drive:"
-        echo "${INFO_PROMPT}        => ${APODEIXI_TESTDB_GIT_URL}"
-        if [ ! -d ${APODEIXI_TESTDB_GIT_URL} ]
-            then
-                echo "${ERR_PROMPT} Directory doesn't exist, so can't mount it:"
-                echo "      ${APODEIXI_TESTDB_GIT_URL}"
-                echo
-                echo echo "${ERR_PROMPT} Aborting testrun..."
-                exit 1
-        fi
-        export APODEIXI_TESTDB_URL_CLONED_BY_CONTAINER="/home/apodeixi-testdb"
-        export GIT_REPO_MOUNT_DOCKER_OPTION="-v ${APODEIXI_TESTDB_GIT_URL}:${APODEIXI_TESTDB_URL_CLONED_BY_CONTAINER}"
-    else
-        echo "${INFO_PROMPT}        => from this URL:"
-        echo "${INFO_PROMPT}        => ${APODEIXI_TESTDB_GIT_URL}"
-        export APODEIXI_TESTDB_URL_CLONED_BY_CONTAINER="${APODEIXI_TESTDB_GIT_URL}"
-fi
+# Call application-side function to set application-specific $_CFG__TESTRUN_DOCKER_OPTIONS
+_CFG__set_testrun_docker_options
 
 # Comments on these options to starting the container:
 #   - $APODEIXI_CONFIG_DIRECTORY environment varialbe is not needed for tests, but saves setup if we have to 
 #       debug within the container
 #
-docker run  -e TIMESTAMP=${TIMESTAMP} -e _CFG__DEPLOYABLE_GIT_BRANCH=${_CFG__DEPLOYABLE_GIT_BRANCH} \
-            -e APODEIXI_TESTDB_GIT_URL=${APODEIXI_TESTDB_URL_CLONED_BY_CONTAINER} \
+docker run  -e TIMESTAMP=${TIMESTAMP} \
+            -e _CFG__DEPLOYABLE_GIT_BRANCH=${_CFG__DEPLOYABLE_GIT_BRANCH} \
             -e _CFG__DEPLOYABLE=${_CFG__DEPLOYABLE} \
-            -e INJECTED_CONFIG_DIRECTORY=/home/apodeixi_testdb_config \
-            -e APODEIXI_CONFIG_DIRECTORY=/home/apodeixi_testdb_config \
             -e UBUNTU_PYTHON_PACKAGE=${UBUNTU_PYTHON_PACKAGE} \
-            --hostname "APO-TESTRUNNER-${TIMESTAMP}" \
-            -v ${PIPELINE_STEP_OUTPUT}:/home/output -v ${PIPELINE_SCRIPTS}/docker_flow/pipeline_steps:/home/scripts \
-            -v $TEST_APODEIXI_CONFIG_DIRECTORY:/home/apodeixi_testdb_config \
-            ${GIT_REPO_MOUNT_DOCKER_OPTION} \
+            --hostname "${_CFG__DEPLOYABLE}-TESTRUNNER-${TIMESTAMP}" \
+            -v ${PIPELINE_STEP_OUTPUT}:/home/output \
+            -v ${PIPELINE_SCRIPTS}/docker_flow/pipeline_steps:/home/scripts \
+            ${_CFG__TESTRUN_DOCKER_OPTIONS} \
             ${_CFG__DEPLOYABLE_IMAGE} & 2>/tmp/error # run in the background so rest of this script can proceed
 abort_on_error
 
-echo "${INFO_PROMPT} ...waiting for Apodeixi test container to start..."
+echo "${_SVC__INFO_PROMPT} ...waiting for Apodeixi test container to start..."
 sleep 3
 
 export APODEIXI_CONTAINER=$(docker ps -q -l) 2>/tmp/error
 abort_on_error
 
 echo
-echo "${INFO_PROMPT} Apodeixi test container ${APODEIXI_CONTAINER} up and running..."
+echo "${_SVC__INFO_PROMPT} Apodeixi test container ${APODEIXI_CONTAINER} up and running..."
 echo
-echo "${INFO_PROMPT} Attempting to run tests for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} using container ${APODEIXI_CONTAINER}..."
-echo "${INFO_PROMPT}            (this might take a 1-2 minutes...)"
+echo "${_SVC__INFO_PROMPT} Attempting to run tests for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} using container ${APODEIXI_CONTAINER}..."
+echo "${_SVC__INFO_PROMPT}            (this might take a 1-2 minutes...)"
 
 docker exec ${APODEIXI_CONTAINER} /bin/bash /home/scripts/testrun.sh 2>/tmp/error
 # We don't use the generic function ./common.sh::abort_on_error because we want to warn the user that a rogue container
 # was left running, so we manually write the code to catch and handle the exception
 if [[ $? != 0 ]]; then
     error=$(</tmp/error)
-    echo "${ERR_PROMPT} ${error}"
+    echo "${_SVC__ERR_PROMPT} ${error}"
     echo
-    echo "${ERR_PROMPT} Due to above error, cleanup wasn't done. Container ${APODEIXI_CONTAINER} needs to be manually stopped"
+    echo "${_SVC__ERR_PROMPT} Due to above error, cleanup wasn't done. Container ${APODEIXI_CONTAINER} needs to be manually stopped"
     echo 
-    echo "${ERR_PROMPT} For more detail on error, check logs under ${PIPELINE_STEP_OUTPUT}"
+    echo "${_SVC__ERR_PROMPT} For more detail on error, check logs under ${PIPELINE_STEP_OUTPUT}"
     unblock_bats
     exit 1
 fi
 echo
-echo "${INFO_PROMPT} Testrun was successful"
+echo "${_SVC__INFO_PROMPT} Testrun was successful"
 
 # GOTCHA - IF TESTING WITH BATS, WE MUST STOP THE CONTAINER TO PREVENT BATS FROM HANGING.
 #       There are other mechanisms in the Bats documentation to avoid hanging (basically, to close file descriptor 3)
@@ -158,15 +138,15 @@ echo "${INFO_PROMPT} Testrun was successful"
 #       Bats then gets unblocked and finishes up the test
 if [ ! -z ${REMOVE_CONTAINER_WHEN_DONE} ] || [ ! -z ${RUNNING_BATS} ]
     then
-        echo "${INFO_PROMPT} ...stopping test container..."
-        echo "${INFO_PROMPT} ...stopped test container $(docker stop ${APODEIXI_CONTAINER})"
-        echo "${INFO_PROMPT} ...removed test container $(docker rm ${APODEIXI_CONTAINER})"
+        echo "${_SVC__INFO_PROMPT} ...stopping test container..."
+        echo "${_SVC__INFO_PROMPT} ...stopped test container $(docker stop ${APODEIXI_CONTAINER})"
+        echo "${_SVC__INFO_PROMPT} ...removed test container $(docker rm ${APODEIXI_CONTAINER})"
         echo
 fi
 
 # Compute how long we took in this script
 duration=$SECONDS
 echo
-echo "${INFO_PROMPT} ---------------- Completed testrun step in $duration sec"
+echo "${_SVC__INFO_PROMPT} ---------------- Completed testrun step in $duration sec"
 echo
-echo "${INFO_PROMPT} Check logs and distribution under ${PIPELINE_STEP_OUTPUT}"
+echo "${_SVC__INFO_PROMPT} Check logs and distribution under ${PIPELINE_STEP_OUTPUT}"

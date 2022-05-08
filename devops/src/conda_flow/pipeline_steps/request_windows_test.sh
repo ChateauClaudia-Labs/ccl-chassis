@@ -10,7 +10,7 @@ export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
 echo
-echo "${INFO_PROMPT} ---------------- Starting Windows test step"
+echo "${_SVC__INFO_PROMPT} ---------------- Starting Windows test step"
 echo
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
@@ -52,7 +52,7 @@ SECONDS=0
 #             where the container-run test harness will expect it (since that's the value of $INJECTED_CONFIG_DIRECTORY)
 #
 
-echo "${INFO_PROMPT} About to prepare script to be run in  Windows test virtual environment..."
+echo "${_SVC__INFO_PROMPT} About to prepare script to be run in  Windows test virtual environment..."
 
 # Comment this environment variable if we want to keep the Conda virtual environment (e.g., to inspect problems) 
 # after this script ends
@@ -101,15 +101,16 @@ fi
 WIN_WORKING_DIR=$(to_windows_path ${WORKING_DIR})
 
 WIN_APODEIXI_TESTDB_GIT_URL="${APODEIXI_TESTDB_GIT_URL}"
-WIN__CFG__DEPLOYABLE_GIT_BRANCH="${_CFG__DEPLOYABLE_GIT_BRANCH}"
-WIN__CFG__DEPLOYABLE_VERSION="${_CFG__DEPLOYABLE_VERSION}"
-WIN_ERR_PROMPT="${ERR_PROMPT}"
+WIN_CFG__DEPLOYABLE_GIT_BRANCH="${_CFG__DEPLOYABLE_GIT_BRANCH}"
+WIN_CFG__DEPLOYABLE_VERSION="${_CFG__DEPLOYABLE_VERSION}"
+WIN_CFG__DEPLOYABLE="${_CFG__DEPLOYABLE}"
+WIN_ERR_PROMPT="${_SVC__ERR_PROMPT}"
 WIN_TIMESTAMP="${TIMESTAMP}"
 WIN_INJECTED_CONFIG_DIRECTORY=$(to_windows_path ${TEST_APODEIXI_CONFIG_DIRECTORY})
 WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE="${REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE}"
 
 echo
-echo "${INFO_PROMPT} ... these environment variables will be set in the script ..."
+echo "${_SVC__INFO_PROMPT} ... these environment variables will be set in the script ..."
 # Environment variables to include in the Windows bash script we will be calling:
 #
 echo "WIN_ANACONDA_DIR:                              ${WIN_ANACONDA_DIR}" # This comes from pipeline_definition.sh
@@ -117,8 +118,9 @@ echo "WIN_OUTPUT_DIR:                                ${WIN_OUTPUT_DIR}"
 echo "WIN_WORKING_DIR:                               ${WIN_WORKING_DIR}"
 
 echo "WIN_APODEIXI_TESTDB_GIT_URL:                   ${WIN_APODEIXI_TESTDB_GIT_URL}"
-echo "WIN__CFG__DEPLOYABLE_GIT_BRANCH:                       ${WIN__CFG__DEPLOYABLE_GIT_BRANCH}"
-echo "WIN__CFG__DEPLOYABLE_VERSION                           ${WIN__CFG__DEPLOYABLE_VERSION}"
+echo "WIN_CFG__DEPLOYABLE_GIT_BRANCH:                ${WIN_CFG__DEPLOYABLE_GIT_BRANCH}"
+echo "WIN_CFG__DEPLOYABLE_VERSION:                   ${WIN_CFG__DEPLOYABLE_VERSION}"
+echo "WIN_CFG__DEPLOYABLE:                           ${WIN_CFG__DEPLOYABLE}"
 echo "WIN_ERR_PROMPT:                                ${WIN_ERR_PROMPT}"
 echo "WIN_TIMESTAMP:                                 ${WIN_TIMESTAMP}"
 echo "WIN_INJECTED_CONFIG_DIRECTORY:                 ${WIN_INJECTED_CONFIG_DIRECTORY}"
@@ -140,7 +142,7 @@ abort_on_error
 #   I chose the latter for simplicy, using the character '#' as the sed delimeter. Hopefully no pipeline definition
 #   will have paths using "#", as the calls to sed would then fail
 #
-echo "${INFO_PROMPT} ...inserting export WIN_ANACONDA_DIR=$(echo $WIN_ANACONDA_DIR)"
+echo "${_SVC__INFO_PROMPT} ...inserting export WIN_ANACONDA_DIR=$(echo $WIN_ANACONDA_DIR)"
 echo
 sed -i "1s#^#export WIN_ANACONDA_DIR=$(echo $WIN_ANACONDA_DIR)\n#" ${SCRIPT_TO_RUN}
 abort_on_error
@@ -157,12 +159,16 @@ echo "      export WIN_APODEIXI_TESTDB_GIT_URL=$(echo $WIN_APODEIXI_TESTDB_GIT_U
 sed -i "1s#^#export WIN_APODEIXI_TESTDB_GIT_URL=$(echo $WIN_APODEIXI_TESTDB_GIT_URL)\n#" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
-echo "      export WIN__CFG__DEPLOYABLE_GIT_BRANCH=$(echo $WIN__CFG__DEPLOYABLE_GIT_BRANCH)"
-sed -i "1s/^/export WIN__CFG__DEPLOYABLE_GIT_BRANCH=$(echo $WIN__CFG__DEPLOYABLE_GIT_BRANCH)\n/" ${SCRIPT_TO_RUN}
+echo "      export WIN_CFG__DEPLOYABLE_GIT_BRANCH=$(echo $WIN_CFG__DEPLOYABLE_GIT_BRANCH)"
+sed -i "1s/^/export WIN_CFG__DEPLOYABLE_GIT_BRANCH=$(echo $WIN_CFG__DEPLOYABLE_GIT_BRANCH)\n/" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
-echo "      export WIN__CFG__DEPLOYABLE_VERSION=$(echo $WIN__CFG__DEPLOYABLE_VERSION)"
-sed -i "1s/^/export WIN__CFG__DEPLOYABLE_VERSION=$(echo $WIN__CFG__DEPLOYABLE_VERSION)\n/" ${SCRIPT_TO_RUN}
+echo "      export WIN_CFG__DEPLOYABLE_VERSION=$(echo $WIN_CFG__DEPLOYABLE_VERSION)"
+sed -i "1s/^/export WIN_CFG__DEPLOYABLE_VERSION=$(echo $WIN_CFG__DEPLOYABLE_VERSION)\n/" ${SCRIPT_TO_RUN}
+abort_on_error
+echo
+echo "      export WIN_CFG__DEPLOYABLE=$(echo $WIN_CFG__DEPLOYABLE)"
+sed -i "1s/^/export WIN_CFG__DEPLOYABLE=$(echo $WIN_CFG__DEPLOYABLE)\n/" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
 echo "      export WIN_ERR_PROMPT='$(echo $WIN_ERR_PROMPT)'"
@@ -181,10 +187,10 @@ echo "      export WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE=$(echo $WIN_REMOVE_V
 sed -i "1s/^/export WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE=$(echo $WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE)\n/" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
-echo "${INFO_PROMPT} ... done preparing the script that must be run in virtual environment"
+echo "${_SVC__INFO_PROMPT} ... done preparing the script that must be run in virtual environment"
 echo
-echo "${INFO_PROMPT} Attempting to run tests for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
-echo "${INFO_PROMPT}            (this might take a 4-5 minutes...)"
+echo "${_SVC__INFO_PROMPT} Attempting to run tests for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
+echo "${_SVC__INFO_PROMPT}            (this might take a 4-5 minutes...)"
 
 # When we run the script, we must refer to it by a Windows path, even if above we manipulated it in Linux and hence have
 # been referring to it by its Linux path up to now
@@ -195,11 +201,11 @@ ${WIN_BASH_EXE} ${WIN_SCRIPT_TO_RUN}                                   2>/tmp/er
 abort_on_error
 
 echo
-echo "${INFO_PROMPT} Windows conda install & test was successful"
+echo "${_SVC__INFO_PROMPT} Windows conda install & test was successful"
 
 # Compute how long we took in this script
 duration=$SECONDS
 echo
-echo "${INFO_PROMPT} ---------------- Completed Windows test step in $duration sec"
+echo "${_SVC__INFO_PROMPT} ---------------- Completed Windows test step in $duration sec"
 echo
-echo "${INFO_PROMPT} Check logs and distribution under ${PIPELINE_STEP_OUTPUT}"
+echo "${_SVC__INFO_PROMPT} Check logs and distribution under ${PIPELINE_STEP_OUTPUT}"

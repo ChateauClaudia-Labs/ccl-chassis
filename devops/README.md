@@ -48,17 +48,18 @@ Thus, for CCL-DevOps a specific pipeline is uniquely determined once you specify
 
 CCL-DevOps is a collection on Bash scripts using a number of environment variables.
 
-Variables whose name starts with `_CFG__...` or `SVC__` should be considered part of the public contract between CCL-DevOps
+Variables and functions whose name starts with `_CFG__...` or `SVC__` should be considered part of the public contract between CCL-DevOps
 and the Applications that use them.
 
-Ownership of such variables is as follows:
+Ownership of such variables (and functions) is as follows:
 
-* Variables whose name starts with `_CFG__...` are owned by the application: each application sets its
+* Variables (or functions) whose name starts with `_CFG__...` are owned by the application: 
+  each application sets its
   value (often in its pipeline definition Bash script), and CCL-DevOps makes use of them. If they refer to paths,
-  those paths would typically be in the application installation area.
+  those paths would typically be under the application installation area.
 
-* Variables whose name starts with `_SVC__...` are owned by the CCL-DevOps: CCL-DevOps sets their
-  value and Application scripts make use of them. If they refer to paths those paths would normally be in the
+* Variables (or functions) whose name starts with `_SVC__...` are owned by the CCL-DevOps: CCL-DevOps sets their
+  value and Application scripts make use of them. If they refer to paths those paths would normally be under the
   CCL-DEVOPS installation area.
 
 This is the list of variables that comprise such contract:
@@ -99,7 +100,7 @@ To run all the tests, change directory to the root of the CCL-DevOps project and
 To run a particular test, replace `test` by its relative path. For example, to run the `test/test_build.bats`,
 run this in Bash:
 
-`./bats/bin/bats test/src/docker_flow/test_build.bats`
+`../bats/bin/bats -r ./test/src/docker_flow/test_build.bats`
 
 If tests fail and we need to see the temporary output (e.g., logs and such), set this environment variable before running
 the tests:

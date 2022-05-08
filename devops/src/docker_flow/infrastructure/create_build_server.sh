@@ -23,17 +23,17 @@ export SETUP_INFRA_LOG="${LOGS_DIR}/${TIMESTAMP}_setup_infra.txt"
 SECONDS=0
 
 echo
-echo "${INFO_PROMPT} ---------------- Building build server's image '${A6I_BUILD_SERVER}'"
+echo "${_SVC__INFO_PROMPT} ---------------- Building build server's image '${A6I_BUILD_SERVER}'"
 echo
-echo "${INFO_PROMPT} UBUNTU_IMAGE=${UBUNTU_IMAGE}"
-echo "${INFO_PROMPT} UBUNTU_PYTHON_PACKAGE=${UBUNTU_PYTHON_PACKAGE}"
+echo "${_SVC__INFO_PROMPT} UBUNTU_IMAGE=${UBUNTU_IMAGE}"
+echo "${_SVC__INFO_PROMPT} UBUNTU_PYTHON_PACKAGE=${UBUNTU_PYTHON_PACKAGE}"
 echo
 
 export DOCKERFILE_DIR=${PIPELINE_SCRIPTS}/docker_flow/docker/build_server
 cd ${DOCKERFILE_DIR}
-echo "${INFO_PROMPT} Current directory is ${DOCKERFILE_DIR}"
+echo "${_SVC__INFO_PROMPT} Current directory is ${DOCKERFILE_DIR}"
 echo
-echo "${INFO_PROMPT} Running Docker build..."
+echo "${_SVC__INFO_PROMPT} Running Docker build..."
 echo
 docker build --build-arg UBUNTU_IMAGE --build-arg UBUNTU_PYTHON_PACKAGE -t ${A6I_BUILD_SERVER} . 1>> ${SETUP_INFRA_LOG} 2>/tmp/error
 abort_on_error
@@ -41,7 +41,7 @@ abort_on_error
 # Compute how long we took in this script
 duration=$SECONDS
 echo
-echo "${INFO_PROMPT} ---------------- Completed creating image for build server in $duration sec"
+echo "${_SVC__INFO_PROMPT} ---------------- Completed creating image for build server in $duration sec"
 echo
 
 

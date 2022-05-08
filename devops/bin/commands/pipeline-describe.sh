@@ -22,4 +22,4 @@ source "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/pipeline_definition.sh"
 # Now show the information for the pipeline in question
 echo 
 echo "---------------------- ${PIPELINE_NAME} Description "
-pipeline_description
+_CFG__pipeline_description

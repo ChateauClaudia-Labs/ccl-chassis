@@ -47,8 +47,8 @@ if [ ! -d ${DISTRIBUTION_FOLDER} ]
         echo $error                             
         exit 1
 fi
-echo "[A6I_WIN_TEST_VIRTUAL_ENV] Looking for a file ${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}* in  ${DISTRIBUTION_FOLDER}" &>> ${TEST_LOG}
-export APODEIXI_DISTRIBUTION=$(echo $(ls ${DISTRIBUTION_FOLDER} | grep "${_CFG__DEPLOYABLE}-${WIN__CFG__DEPLOYABLE_VERSION}") | awk '{print $1}') \
+echo "[A6I_WIN_TEST_VIRTUAL_ENV] Looking for a file ${WIN_CFG__DEPLOYABLE}-${WIN_CFG__DEPLOYABLE_VERSION}* in  ${DISTRIBUTION_FOLDER}" &>> ${TEST_LOG}
+export APODEIXI_DISTRIBUTION=$(echo $(ls ${DISTRIBUTION_FOLDER} | grep "${WIN_CFG__DEPLOYABLE}-${WIN_CFG__DEPLOYABLE_VERSION}") | awk '{print $1}') \
                 1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 if [ -z ${APODEIXI_DISTRIBUTION} ]
@@ -138,12 +138,12 @@ cd $GIT_CLONE_DIR                                   &>> ${TEST_LOG}
 abort_testrun_on_error
 
 
-echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ...git clone ${WIN_APODEIXI_TESTDB_GIT_URL} --branch ${WIN__CFG__DEPLOYABLE_GIT_BRANCH}"        &>> ${TEST_LOG}
+echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ...git clone ${WIN_APODEIXI_TESTDB_GIT_URL} --branch ${WIN_CFG__DEPLOYABLE_GIT_BRANCH}"        &>> ${TEST_LOG}
 echo "[A6I_WIN_TEST_VIRTUAL_ENV]              (current directory for git clone is $(pwd)"                         &>> ${TEST_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action takes
 SECONDS=0
 echo                                                                                            &>> ${TEST_LOG}
-git clone  ${WIN_APODEIXI_TESTDB_GIT_URL} --branch ${WIN__CFG__DEPLOYABLE_GIT_BRANCH}                   1>> ${TEST_LOG} 2>/tmp/error
+git clone  ${WIN_APODEIXI_TESTDB_GIT_URL} --branch ${WIN_CFG__DEPLOYABLE_GIT_BRANCH}                   1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 
 echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ...git checkout"        &>> ${TEST_LOG}
@@ -209,7 +209,7 @@ echo                                                                            
 #
 #       ${WIN_ANACONDA_DIR}/envs/${VIRTUAL_ENV}/lib/site-packages/apodeixi
 #
-cd ${WIN_ANACONDA_DIR}/envs/${VIRTUAL_ENV}/lib/site-packages/${_CFG__DEPLOYABLE}      1>> ${TEST_LOG} 2>/tmp/error
+cd ${WIN_ANACONDA_DIR}/envs/${VIRTUAL_ENV}/lib/site-packages/${WIN_CFG__DEPLOYABLE}      1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 echo                                                                                &>> ${TEST_LOG}
 echo "[A6I_WIN_TEST_VIRTUAL_ENV] Current directory is $(pwd)"                             &>> ${TEST_LOG}

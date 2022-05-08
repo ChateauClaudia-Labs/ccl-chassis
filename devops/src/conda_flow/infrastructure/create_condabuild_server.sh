@@ -23,17 +23,17 @@ export SETUP_INFRA_LOG="${LOGS_DIR}/${TIMESTAMP}_setup_infra.txt"
 SECONDS=0
 
 echo
-echo "${INFO_PROMPT} ---------------- Building condabuild server's image '${A6I_CONDABUILD_SERVER}'"
+echo "${_SVC__INFO_PROMPT} ---------------- Building condabuild server's image '${A6I_CONDABUILD_SERVER}'"
 echo
-echo "${INFO_PROMPT} UBUNTU_IMAGE=${UBUNTU_IMAGE}"
-echo "${INFO_PROMPT} ANACONDA_VERSION=${ANACONDA_VERSION}"
+echo "${_SVC__INFO_PROMPT} UBUNTU_IMAGE=${UBUNTU_IMAGE}"
+echo "${_SVC__INFO_PROMPT} ANACONDA_VERSION=${ANACONDA_VERSION}"
 echo
 
 export DOCKERFILE_DIR=${PIPELINE_SCRIPTS}/conda_flow/docker/condabuild_server
 cd ${DOCKERFILE_DIR}
-echo "${INFO_PROMPT} Current directory is ${DOCKERFILE_DIR}"
+echo "${_SVC__INFO_PROMPT} Current directory is ${DOCKERFILE_DIR}"
 echo
-echo "${INFO_PROMPT} Running Docker build... (this may take a few minutes)"
+echo "${_SVC__INFO_PROMPT} Running Docker build... (this may take a few minutes)"
 echo
 docker build    --build-arg UBUNTU_IMAGE \
                 --build-arg ANACONDA_VERSION \
@@ -44,7 +44,7 @@ abort_on_error
 # Compute how long we took in this script
 duration=$SECONDS
 echo
-echo "${INFO_PROMPT} ---------------- Completed creating image for condabuild server in $duration sec"
+echo "${_SVC__INFO_PROMPT} ---------------- Completed creating image for condabuild server in $duration sec"
 echo
 
 

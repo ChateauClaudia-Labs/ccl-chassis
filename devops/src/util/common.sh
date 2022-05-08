@@ -13,9 +13,9 @@ abort_on_error() {
     if [[ $? != 0 ]]; then
       error=$(</tmp/error)
       echo
-      echo "${ERR_PROMPT} ${error}"
+      echo "${_SVC__ERR_PROMPT} ${error}"
       echo
-      echo "${ERR_PROMPT} For more detail on error, check logs under ${PIPELINE_STEP_OUTPUT}"
+      echo "${_SVC__ERR_PROMPT} For more detail on error, check logs under ${PIPELINE_STEP_OUTPUT}"
       exit 1
     fi
 }
@@ -23,9 +23,19 @@ abort_on_error() {
 unblock_bats() {
     if [ ! -z ${RUNNING_BATS} ]
         then
-            echo "${INFO_PROMPT} ...stopping test container..."
-            echo "${INFO_PROMPT} ...stopped test container $(docker stop ${APODEIXI_CONTAINER})"
-            echo "${INFO_PROMPT} ...removed test container $(docker rm ${APODEIXI_CONTAINER})"
+            echo "${_SVC__INFO_PROMPT} ...stopping test container..."
+            echo "${_SVC__INFO_PROMPT} ...stopped test container $(docker stop ${APODEIXI_CONTAINER})"
+            echo "${_SVC__INFO_PROMPT} ...removed test container $(docker rm ${APODEIXI_CONTAINER})"
+            echo
+    fi    
+}
+
+unblock_bats_in_build() {
+    if [ ! -z ${RUNNING_BATS} ]
+        then
+            echo "${_SVC__INFO_PROMPT} ...stopping build container..."
+            echo "${_SVC__INFO_PROMPT} ...stopped build container $(docker stop ${BUILD_CONTAINER})"
+            echo "${_SVC__INFO_PROMPT} ...removed build container $(docker rm ${BUILD_CONTAINER})"
             echo
     fi    
 }
@@ -34,13 +44,13 @@ unblock_bats() {
 # For example, "220331.120319" is a run done at 12:03 pm (and 19 seconds) on March 31, 2022
 export TIMESTAMP="$(date +"%y%m%d.%H%M%S")"
 
-export ERR_PROMPT="[A6I CI/CD ERROR]"
+export _SVC__ERR_PROMPT="[A6I CI/CD ERROR]"
 export INFO_PROMPT="[A6I CI/CD INFO]"
 
 # Check that the pipeline id was passed as argument $1
 if [ -z "$1" ]
   then
-    echo "${ERR_PROMPT} Pipeline id was not provided as an argument. It should be an integer id like '1001'"
+    echo "${_SVC__ERR_PROMPT} Pipeline id was not provided as an argument. It should be an integer id like '1001'"
     exit 1
 fi
 export PIPELINE_NAME="$1_pipeline" # For example, '1001_pipeline'. This is a folder with parameters defining a particular pipeline   
@@ -71,13 +81,13 @@ fi
 if [ -z "$RUN_TIMESTAMP" ]
   then
     export RUN_TIMESTAMP=${TIMESTAMP}
-    echo "${INFO_PROMPT} Running pipeline '${PIPELINE_NAME}' with run ID '${RUN_TIMESTAMP}'"
+    echo "${_SVC__INFO_PROMPT} Running pipeline '${PIPELINE_NAME}' with run ID '${RUN_TIMESTAMP}'"
     echo
 fi
 
 # Check pipeline album contains a pipeline with the given ID
   [ ! -d "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}" ] && echo \
-  && echo "${ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' does not exist" \
+  && echo "${_SVC__ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' does not exist" \
   && echo \
   && exit 1
 
@@ -122,16 +132,16 @@ if [ -z "${PIPELINE_STEP_INTAKE}" ] # In this case use the default, if earlier c
         export PIPELINE_STEP_INTAKE=${PIPELINE_STEP_OUTPUT}
 fi
 
-echo "${INFO_PROMPT} PIPELINE_STEP_INTAKE = ${PIPELINE_STEP_INTAKE}"
+echo "${_SVC__INFO_PROMPT} PIPELINE_STEP_INTAKE = ${PIPELINE_STEP_INTAKE}"
 echo
-echo "${INFO_PROMPT} PIPELINE_STEP_OUTPUT = ${PIPELINE_STEP_OUTPUT}"
+echo "${_SVC__INFO_PROMPT} PIPELINE_STEP_OUTPUT = ${PIPELINE_STEP_OUTPUT}"
 echo
 
 # Check pipeline folder in the album contains a definition script
   [ ! -f "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/pipeline_definition.sh" ] && echo \
-  && echo "${ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
-  && echo "${ERR_PROMPT} It should contain a 'pipeline_definition'.sh file " \
-  && echo "with two functions called 'pipeline_description' and 'pipeline_short_description'" \
+  && echo "${_SVC__ERR_PROMPT} '${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}' is improperly configured:" \
+  && echo "${_SVC__ERR_PROMPT} It should contain a 'pipeline_definition'.sh file " \
+  && echo "with two functions called '_CFG__pipeline_description' and '_CFG__pipeline_short_description'" \
   && echo \
   && exit 1
 
@@ -145,24 +155,24 @@ if [[ $? != 0 ]]; then
     error=$(</tmp/error)
     docker_down=$(echo $error | grep "Cannot connect to the Docker daemon" | wc -l)
     if [[ $docker_down == 1 ]]; then
-        echo "${ERR_PROMPT} Docker daemon not running, so must abort. In WSL you may start it from Bash by doing:"
+        echo "${_SVC__ERR_PROMPT} Docker daemon not running, so must abort. In WSL you may start it from Bash by doing:"
         echo
         echo "   sudo service docker start"
         echo
         echo "...aborting script '$0'"
     else
-        echo "${ERR_PROMPT} Docker seems to be running but is giving errors:"
+        echo "${_SVC__ERR_PROMPT} Docker seems to be running but is giving errors:"
         echo
         echo $error
     fi
     exit 1
 else
-    echo "${INFO_PROMPT} Verified that Docker daemon is running"
+    echo "${_SVC__INFO_PROMPT} Verified that Docker daemon is running"
 fi
 
 if [ ! -z ${_CFG__DEPLOYABLE_IMAGE} ]
     then
         echo
-        echo "${INFO_PROMPT} Will be working with Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'"
+        echo "${_SVC__INFO_PROMPT} Will be working with Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'"
         echo
 fi

@@ -12,12 +12,12 @@ source ${PIPELINE_SCRIPTS}/util/common.sh
 export CONDA_RECIPE_DIR=${_CFG__PIPELINE_ALBUM}/../src/conda_flow/conda_recipes/
 
 echo
-echo "${INFO_PROMPT} ---------------- Starting Windows conda build step"
+echo "${_SVC__INFO_PROMPT} ---------------- Starting Windows conda build step"
 echo
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
 
-echo "${INFO_PROMPT} About to prepare script to be run in  Windows buildS virtual environment..."
+echo "${_SVC__INFO_PROMPT} About to prepare script to be run in  Windows buildS virtual environment..."
 
 # Comment this environment variable if we want to keep the Conda virtual environment (e.g., to inspect problems) 
 # after this script ends
@@ -54,14 +54,14 @@ if [ ! -d "${WORKING_DIR}" ]; then
 fi
 #mkdir ${WORKING_DIR}
 
-WIN_ERR_PROMPT="${ERR_PROMPT}"
+WIN_ERR_PROMPT="${_SVC__ERR_PROMPT}"
 WIN_TIMESTAMP="${TIMESTAMP}"
 WIN_CONDA_RECIPE="${_CFG__CONDA_RECIPE}"
 WIN_CONDA_RECIPE_DIR=$(to_windows_path ${CONDA_RECIPE_DIR})
 WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE="${REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE}"
 
 echo
-echo "${INFO_PROMPT} ... these environment variables will be set in the script ..."
+echo "${_SVC__INFO_PROMPT} ... these environment variables will be set in the script ..."
 # Environment variables to include in the Windows bash script we will be calling:
 #
 echo "WIN_ANACONDA_DIR:                              ${WIN_ANACONDA_DIR}" # This comes from pipeline_definition.sh
@@ -92,7 +92,7 @@ echo
 #   will have paths using "#", as the calls to sed would then fail
 #
 
-echo "${INFO_PROMPT} ...inserting export WIN_ANACONDA_DIR=$(echo $WIN_ANACONDA_DIR)"
+echo "${_SVC__INFO_PROMPT} ...inserting export WIN_ANACONDA_DIR=$(echo $WIN_ANACONDA_DIR)"
 echo
 sed -i "1s#^#export WIN_ANACONDA_DIR=$(echo $WIN_ANACONDA_DIR)\n#" ${SCRIPT_TO_RUN}
 abort_on_error
@@ -121,10 +121,10 @@ echo "      export WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE=$(echo $WIN_REMOVE_V
 sed -i "1s/^/export WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE=$(echo $WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE)\n/" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
-echo "${INFO_PROMPT} ... done preparing the script that must be run in virtual environment"
+echo "${_SVC__INFO_PROMPT} ... done preparing the script that must be run in virtual environment"
 echo
-echo "${INFO_PROMPT} Attempting to run conda build for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
-echo "${INFO_PROMPT}            (this might take a 5-10 minutes...)"
+echo "${_SVC__INFO_PROMPT} Attempting to run conda build for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
+echo "${_SVC__INFO_PROMPT}            (this might take a 5-10 minutes...)"
 
 # When we run the script, we must refer to it by a Windows path, even if above we manipulated it in Linux and hence have
 # been referring to it by its Linux path up to now
@@ -135,11 +135,11 @@ ${WIN_BASH_EXE} ${WIN_SCRIPT_TO_RUN}                                   2>/tmp/er
 abort_on_error
 
 echo
-echo "${INFO_PROMPT} Windows conda build was successful"
+echo "${_SVC__INFO_PROMPT} Windows conda build was successful"
 
 # Compute how long we took in this script
 duration=$SECONDS
 echo
-echo "${INFO_PROMPT} ---------------- Completed Windows conda build step in $duration sec"
+echo "${_SVC__INFO_PROMPT} ---------------- Completed Windows conda build step in $duration sec"
 echo
-echo "${INFO_PROMPT} Check logs and distribution under ${PIPELINE_STEP_OUTPUT}"
+echo "${_SVC__INFO_PROMPT} Check logs and distribution under ${PIPELINE_STEP_OUTPUT}"

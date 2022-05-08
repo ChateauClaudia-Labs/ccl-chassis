@@ -30,10 +30,10 @@ fi
 export PIPELINE_LOG="${LOGS_DIR}/MASTER_LOG.txt"
 
 START=$SECONDS
-echo "${INFO_PROMPT} Running pipeline ${PIPELINE_ID}"
-echo "${INFO_PROMPT}"
-echo "${INFO_PROMPT}    Pipeline description: $(pipeline_short_description)"
-echo "${INFO_PROMPT}"
+echo "${_SVC__INFO_PROMPT} Running pipeline ${PIPELINE_ID}"
+echo "${_SVC__INFO_PROMPT}"
+echo "${_SVC__INFO_PROMPT}    Pipeline description: $(_CFG__pipeline_short_description)"
+echo "${_SVC__INFO_PROMPT}"
 
 # Run the end-to-end pipeline. Use 'source' so that we inherit this script's environment variables
 source "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/execute_pipeline.sh"
@@ -41,9 +41,9 @@ source "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/execute_pipeline.sh"
 echo
 END=$SECONDS
 duration=$((${END} - ${START}))
-echo "${INFO_PROMPT} DONE - pipeline ${PIPELINE_ID} completed in $duration sec"
+echo "${_SVC__INFO_PROMPT} DONE - pipeline ${PIPELINE_ID} completed in $duration sec"
 echo
-echo "${INFO_PROMPT} See logs at:"
-echo "${INFO_PROMPT}        ${LOGS_DIR}"
+echo "${_SVC__INFO_PROMPT} See logs at:"
+echo "${_SVC__INFO_PROMPT}        ${LOGS_DIR}"
 echo
 

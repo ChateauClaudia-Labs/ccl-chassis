@@ -30,7 +30,7 @@ echo &>> ${CONDA_BUILD_LOG}
 /home/anaconda3/bin/conda-build /home/conda_build_recipe            &>> ${CONDA_BUILD_LOG}
 if [[ $? != 0 ]]; then
     error=$(</tmp/error)
-    echo "${ERR_PROMPT} ${error}" &>> ${CONDA_BUILD_LOG}
+    echo "${_SVC__ERR_PROMPT} ${error}" &>> ${CONDA_BUILD_LOG}
     # Signal error again, this time for caller to catch
     echo "Aborting build because: ${error}"  >/dev/stderr
     exit 1
@@ -82,7 +82,7 @@ fi
 #    -o /home/output/dist        &>> ${CONDA_BUILD_LOG}
 #if [[ $? != 0 ]]; then
 #    error=$(</tmp/error)
-#    echo "${ERR_PROMPT} ${error}" &>> ${CONDA_BUILD_LOG}
+#    echo "${_SVC__ERR_PROMPT} ${error}" &>> ${CONDA_BUILD_LOG}
 #    # Signal error again, this time for caller to catch
 #    echo "Aborting build because: ${error}"  >/dev/stderr
 #    exit 1

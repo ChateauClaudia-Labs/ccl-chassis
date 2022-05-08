@@ -34,7 +34,7 @@ echo &>> ${BUILD_LOG}
 git clone  ${APODEIXI_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH} 1>> ${BUILD_LOG} 2>/tmp/error
 if [[ $? != 0 ]]; then
     error=$(</tmp/error)
-    echo "${ERR_PROMPT} ${error}" &>> ${BUILD_LOG}
+    echo "${_SVC__ERR_PROMPT} ${error}" &>> ${BUILD_LOG}
     # Signal error again, this time for caller to catch
     echo "Aborting build because: ${error}"  >/dev/stderr
     exit 1
@@ -63,7 +63,7 @@ echo &>> ${BUILD_LOG}
 python setup.py bdist_wheel &>> ${BUILD_LOG} 2>/tmp/error
 if [[ $? != 0 ]]; then
     error=$(</tmp/error)
-    echo "${ERR_PROMPT} ${error}" &>> ${BUILD_LOG}
+    echo "${_SVC__ERR_PROMPT} ${error}" &>> ${BUILD_LOG}
     # Signal error again, this time for caller to catch
     echo "Aborting build because: ${error}"  >/dev/stderr
     exit 1
@@ -79,7 +79,7 @@ echo &>> ${BUILD_LOG}
 cp -r dist /home/output/ &>> ${BUILD_LOG} 2>/tmp/error
 if [[ $? != 0 ]]; then
     error=$(</tmp/error)
-    echo "${ERR_PROMPT} ${error}" &>> ${BUILD_LOG}
+    echo "${_SVC__ERR_PROMPT} ${error}" &>> ${BUILD_LOG}
     # Signal error again, this time for caller to catch
     echo "Aborting build because: ${error}"  >/dev/stderr
     exit 1

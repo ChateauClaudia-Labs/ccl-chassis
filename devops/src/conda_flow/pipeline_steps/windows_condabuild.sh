@@ -85,7 +85,7 @@ echo                                                                            
 ${VIRTUAL_ENV_CONDA_BLD_EXE} ${WIN_CONDA_RECIPE_DIR}/${WIN_CONDA_RECIPE}              &>> ${CONDA_BUILD_LOG}
 if [[ $? != 0 ]]; then
     error=$(</tmp/error)
-    echo "${ERR_PROMPT} ${error}" &>> ${CONDA_BUILD_LOG}
+    echo "${_SVC__ERR_PROMPT} ${error}" &>> ${CONDA_BUILD_LOG}
     # Signal error again, this time for caller to catch
     echo "Aborting build because: ${error}" 
     exit 1

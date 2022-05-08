@@ -15,7 +15,7 @@ abort_testrun_on_error() {
 if [[ $? != 0 ]]; then
     #error=$(</tmp/error)
     echo >/dev/stderr
-    echo "${ERR_PROMPT} ${error}"                                                                           &>> ${TEST_LOG}
+    echo "${_SVC__ERR_PROMPT} ${error}"                                                                           &>> ${TEST_LOG}
     # Signal error again, this time for caller to catch, but limiting error to caller to just the last 5 lines.
     # If caller wants to see all the error message, caller can go to the logs
     echo "Aborting testrun. Here is the error message (cut down to last 5 lines):"  >/dev/stderr

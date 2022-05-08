@@ -43,9 +43,9 @@ _test_file_setup() {
     # Unique timestamp used e.g., as a prefix in the names of log files
     export TIMESTAMP="$(date +"%y%m%d.%H%M%S")"
 
-    # Log entry prefixes used by Apodeixi DevOps
-    export ERR_PROMPT="[A6I CI/CD ERROR]"
-    export INFO_PROMPT="[A6I CI/CD INFO]"
+    # Log entry prefixes used by CCL-DevOps
+    export _SVC__ERR_PROMPT="[A6I CI/CD ERROR]"
+    export _SVC__INFO_PROMPT="[A6I CI/CD INFO]"
 
 }
 

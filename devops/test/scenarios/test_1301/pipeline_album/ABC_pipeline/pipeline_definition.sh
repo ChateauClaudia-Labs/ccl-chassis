@@ -3,7 +3,7 @@
 # This variable holds a text description of what this pipeline does. This is needed by the discover_pipelines.sh
 # script to help DevOps operators discover which pipeline to use by interrogating pipelines on what their purpose is.
 # So this variable is required for all pipelines.
-pipeline_description() {
+_CFG__pipeline_description() {
     echo "
     Pipeline used during test of the testrun pipeline step
 
@@ -14,7 +14,7 @@ pipeline_description() {
 }
 
 # Single-line description suitable for use when listing multiple pipelines
-pipeline_short_description() {
+_CFG__pipeline_short_description() {
     echo "Used to test testrun pipeline step"
 }
 
@@ -26,10 +26,6 @@ export UBUNTU_PYTHON_PACKAGE="python3.9"
 export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.8"
 export _CFG__DEPLOYABLE_VERSION="0.9.8"
 
-export APODEIXI_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"
-
-export APODEIXI_TESTDB_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi-testdb.git"
-
 # Define which server image to use for the build. Determines version of Ubuntu and Python for the container where the build runs
 export A6I_BUILD_SERVER="a6i-build-server"
 
@@ -39,10 +35,22 @@ export A6I_BUILD_SERVER="a6i-build-server"
 export _CFG__DEPLOYABLE_IMAGE="apodeixi:test_1101"
 export _CFG__DEPLOYABLE="apodeixi"
 
+#export APODEIXI_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"
+export TEST_APODEIXI_CONFIG_DIRECTORY=${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/apodeixi_testdb_config
+export APODEIXI_TESTDB_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi-testdb.git"
+
+_CFG__set_testrun_docker_options() {
+  
+    echo    " -e APODEIXI_TESTDB_GIT_URL=${APODEIXI_TESTDB_GIT_URL} " \
+            " -e INJECTED_CONFIG_DIRECTORY=/home/apodeixi_testdb_config" \
+            " -e APODEIXI_CONFIG_DIRECTORY=/home/apodeixi_testdb_config" \
+            " -v $TEST_APODEIXI_CONFIG_DIRECTORY:/home/apodeixi_testdb_config" \
+            "${GIT_REPO_MOUNT_DOCKER_OPTION} "> /tmp/_CFG__TESTRUN_DOCKER_OPTIONS.txt
+    export _CFG__TESTRUN_DOCKER_OPTIONS=`cat /tmp/_CFG__TESTRUN_DOCKER_OPTIONS.txt`
+}
+
 # This is needed to tell the deployment stage to stop Docker, since when using Bats to test code that starts
 # containers Bats will hang until the Docker container is stopped.
 #   For real production deployment, the pipeline_definition should never set this variable
 #
 export RUNNING_BATS=1
-
-export TEST_APODEIXI_CONFIG_DIRECTORY=${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/apodeixi_testdb_config

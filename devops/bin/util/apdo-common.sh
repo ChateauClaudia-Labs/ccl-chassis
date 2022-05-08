@@ -56,7 +56,7 @@ cli_pipeline_def_exists() {
   [ ! -f "${1}/${2}/pipeline_definition.sh" ] && echo \
   && echo "${ERROR_PROMPT} '${2}' is improperly configured:" \
   && echo "${ERROR_PROMPT} It should contain a 'pipeline_definition.sh' file " \
-  && echo "with two functions called 'pipeline_description' and 'pipeline_short_description'" \
+  && echo "with two functions called '_CFG__pipeline_description' and '_CFG__pipeline_short_description'" \
   && echo \
   && exit 1
 }

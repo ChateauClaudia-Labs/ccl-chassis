@@ -3,7 +3,7 @@
 # This variable holds a text description of what this pipeline does. This is needed by the discover_pipelines.sh
 # script to help DevOps operators discover which pipeline to use by interrogating pipelines on what their purpose is.
 # So this variable is required for all pipelines.
-pipeline_description() {
+_CFG__pipeline_description() {
     echo "
     Pipeline used to test if 'apdo pipeline describe' works properly
 
@@ -14,7 +14,7 @@ pipeline_description() {
 }
 
 # Single-line description suitable for use when listing multiple pipelines
-pipeline_short_description() {
+_CFG__pipeline_short_description() {
     echo "Used to test deploying Apodeixi v0.9.7 as a Linux container locally"
 }
 

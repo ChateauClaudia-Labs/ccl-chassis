@@ -41,7 +41,7 @@ setup() {
     echo "$output" >> $TEST_LOG
 
     # Validate that there are no errors in the log. And if we have errors, this will display the first one
-    refute_line --partial "${ERR_PROMPT}"
+    refute_line --partial "${_SVC__ERR_PROMPT}"
 
     # Things to catch if test fails, as output inside the container:
     # "FAILED (errors=1)"

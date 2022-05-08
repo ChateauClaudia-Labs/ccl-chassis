@@ -29,10 +29,10 @@ fi
 export PROVISIONING_LOG="${LOGS_DIR}/${TIMESTAMP}_provisioning.txt"
 
 echo
-echo "${INFO_PROMPT} ---------------- Starting provisioning step"
+echo "${_SVC__INFO_PROMPT} ---------------- Starting provisioning step"
 echo
-echo "${INFO_PROMPT} UBUNTU_IMAGE=${UBUNTU_IMAGE}"
-echo "${INFO_PROMPT} PYTHON_VERSION=${PYTHON_VERSION}"
+echo "${_SVC__INFO_PROMPT} UBUNTU_IMAGE=${UBUNTU_IMAGE}"
+echo "${_SVC__INFO_PROMPT} PYTHON_VERSION=${PYTHON_VERSION}"
 echo
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
@@ -50,27 +50,27 @@ if [ ! -d "${WORK_FOLDER}" ]; then
     mkdir ${WORK_FOLDER}
 fi
 
-echo "${INFO_PROMPT} Copying Dockerfile to work folder"
+echo "${_SVC__INFO_PROMPT} Copying Dockerfile to work folder"
 cp ${PROVISIONING_DOCKERFILE} ${WORK_FOLDER} 2>/tmp/error
 abort_on_error
 
-echo "${INFO_PROMPT} Copying Apodeixi distribution to work folder"
+echo "${_SVC__INFO_PROMPT} Copying Apodeixi distribution to work folder"
 cp ${APODEIXI_DIST}/${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}-py3-none-any.whl ${WORK_FOLDER} 2>/tmp/error
 abort_on_error
 
 # pip does not come with the Ubuntu python distribution, unfortunately, so we need to download this module to later help us get
 # python. The Dockerfile will copy this `get-pip.py` script so that it can be invoked from within the apodeixi container
 # in order to provision pip
-echo "${INFO_PROMPT} Switching directory to work folder"
+echo "${_SVC__INFO_PROMPT} Switching directory to work folder"
 cd ${WORK_FOLDER}
 
-echo "${INFO_PROMPT} About to downlod pip to work folder..."
+echo "${_SVC__INFO_PROMPT} About to downlod pip to work folder..."
 echo                                                                            &>> ${PROVISIONING_LOG}
 echo "=============== Output from 'curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py"  &>> ${PROVISIONING_LOG}
 echo                                                                            &>> ${PROVISIONING_LOG}
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py                         &>> ${PROVISIONING_LOG}
 
-echo "${INFO_PROMPT} About to build Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'..."
+echo "${_SVC__INFO_PROMPT} About to build Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'..."
 echo                                                                            &>> ${PROVISIONING_LOG}
 echo "=============== Output from building Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'"  &>> ${PROVISIONING_LOG}
 echo                                                                            &>> ${PROVISIONING_LOG}
@@ -84,6 +84,6 @@ abort_on_error
 # Compute how long we took in this script
 duration=$SECONDS
 echo
-echo "${INFO_PROMPT} ---------------- Completed provisioning step in $duration sec"
+echo "${_SVC__INFO_PROMPT} ---------------- Completed provisioning step in $duration sec"
 echo
-echo "${INFO_PROMPT} Check logs and distribution under ${PIPELINE_STEP_OUTPUT}"
+echo "${_SVC__INFO_PROMPT} Check logs and distribution under ${PIPELINE_STEP_OUTPUT}"

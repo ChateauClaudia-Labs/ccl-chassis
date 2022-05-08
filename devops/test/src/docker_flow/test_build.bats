@@ -41,7 +41,7 @@ setup() {
     echo "$output" >> $TEST_LOG
 
     # Validate that there are no errors in the log. And if we have errors, this will display the first one
-    refute_line --partial "${ERR_PROMPT}"
+    refute_line --partial "${_SVC__ERR_PROMPT}"
 
     # Even if there are no errors in the log, if something more fatal happened, catch it here
     assert [ ${status} -eq 0 ]
