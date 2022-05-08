@@ -23,6 +23,7 @@ export PYTHON_VERSION="3.9"
 # Release version that is to be built
 export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.8"
 export _CFG__DEPLOYABLE_VERSION="0.9.8"
+export _CFG__DEPLOYABLE="apodeixi"
 
 export APODEIXI_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"
 

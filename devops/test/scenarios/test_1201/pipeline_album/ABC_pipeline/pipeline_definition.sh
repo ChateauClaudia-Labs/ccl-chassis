@@ -33,7 +33,8 @@ export A6I_BUILD_SERVER="a6i-build-server"
 # Defines the name (& tag) for the Apodeixi image to be created by the pipeline. If there is no tag, Docker will
 # by default put a tag of ":latest"
 #
-_CFG__DEPLOYABLE_IMAGE="apodeixi:test_1101"
+export _CFG__DEPLOYABLE_IMAGE="apodeixi:test_1101"
+export _CFG__DEPLOYABLE="apodeixi"
 
 # Defines what Apodeixi environment is being mounted in the Apodeixi container by this pipeline
 #

@@ -94,7 +94,7 @@ All tests and their tooling lies in the test folder.
 
 To run all the tests, change directory to the root of the CCL-DevOps project and run this command in Bash:
 
-`./bats/bin/bats -r test/src`
+` ../bats/bin/bats -r ./test`
 
 To run a particular test, replace `test` by its relative path. For example, to run the `test/test_build.bats`,
 run this in Bash:

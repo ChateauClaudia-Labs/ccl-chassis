@@ -36,17 +36,8 @@ export A6I_BUILD_SERVER="a6i-build-server"
 # Defines the name (& tag) for the Apodeixi image to be created by the pipeline. If there is no tag, Docker will
 # by default put a tag of ":latest"
 #
-_CFG__DEPLOYABLE_IMAGE="apodeixi:test_1101"
-
-# Defines what Apodeixi environment is being mounted in the Apodeixi container by this pipeline
-#
-#export ENVIRONMENT="TEST_ENV"
-
-#export SECRETS_FOLDER=${PIPELINE_STEP_INTAKE}/${ENVIRONMENT}/secrets
-#export COLLABORATION_AREA=${PIPELINE_STEP_INTAKE}/${ENVIRONMENT}/collaboration_area
-#export KNOWLEDGE_BASE_FOLDER=${PIPELINE_STEP_INTAKE}/${ENVIRONMENT}/kb
-
-#export APODEIXI_CONFIG_DIRECTORY=${PIPELINE_STEP_INTAKE}/${ENVIRONMENT}
+export _CFG__DEPLOYABLE_IMAGE="apodeixi:test_1101"
+export _CFG__DEPLOYABLE="apodeixi"
 
 # This is needed to tell the deployment stage to stop Docker, since when using Bats to test code that starts
 # containers Bats will hang until the Docker container is stopped.
