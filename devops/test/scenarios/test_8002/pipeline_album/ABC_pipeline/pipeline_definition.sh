@@ -22,7 +22,7 @@ _CFG__pipeline_short_description() {
 export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.7"
 export _CFG__DEPLOYABLE_VERSION="0.9.7"
 
-export APODEIXI_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"
+export _CFG__DEPLOYABLE_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"
 
 # Define which server image to use for the build. Determines version of Ubuntu and Python for the container where the build runs
-export A6I_BUILD_SERVER="a6i-build-server"
+export _CFG__BUILD_SERVER="a6i-build-server"

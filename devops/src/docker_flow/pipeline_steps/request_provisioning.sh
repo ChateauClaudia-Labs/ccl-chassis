@@ -19,7 +19,7 @@ export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
-export UBUNTU_IMAGE="ubuntu:20.04"
+export _CFG__UBUNTU_IMAGE="ubuntu:20.04"
 export PYTHON_VERSION="3.9"
 
 LOGS_DIR="${PIPELINE_STEP_OUTPUT}/logs" # This is a mount of a directory in host machine, so it might already exist
@@ -31,7 +31,7 @@ export PROVISIONING_LOG="${LOGS_DIR}/${TIMESTAMP}_provisioning.txt"
 echo
 echo "${_SVC__INFO_PROMPT} ---------------- Starting provisioning step"
 echo
-echo "${_SVC__INFO_PROMPT} UBUNTU_IMAGE=${UBUNTU_IMAGE}"
+echo "${_SVC__INFO_PROMPT} _CFG__UBUNTU_IMAGE=${_CFG__UBUNTU_IMAGE}"
 echo "${_SVC__INFO_PROMPT} PYTHON_VERSION=${PYTHON_VERSION}"
 echo
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
@@ -74,7 +74,7 @@ echo "${_SVC__INFO_PROMPT} About to build Apodeixi image '${_CFG__DEPLOYABLE_IMA
 echo                                                                            &>> ${PROVISIONING_LOG}
 echo "=============== Output from building Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'"  &>> ${PROVISIONING_LOG}
 echo                                                                            &>> ${PROVISIONING_LOG}
-docker build --build-arg UBUNTU_IMAGE \
+docker build --build-arg _CFG__UBUNTU_IMAGE \
             --build-arg PYTHON_VERSION \
             --build-arg _CFG__DEPLOYABLE_VERSION \
             --build-arg _CFG__DEPLOYABLE \

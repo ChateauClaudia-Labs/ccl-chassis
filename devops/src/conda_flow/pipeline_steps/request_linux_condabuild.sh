@@ -15,7 +15,7 @@ echo
 echo "${_SVC__INFO_PROMPT} ---------------- Starting Linux conda build step"
 echo
 echo "${_SVC__INFO_PROMPT} CONDA_RECIPE               =   ${_CFG__CONDA_RECIPE}"
-echo "${_SVC__INFO_PROMPT} A6I_CONDABUILD_SERVER      =   ${A6I_CONDABUILD_SERVER}"
+echo "${_SVC__INFO_PROMPT} _CFG__CONDABUILD_SERVER      =   ${_CFG__CONDABUILD_SERVER}"
 
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
@@ -31,7 +31,7 @@ docker run ${REMOVE_CONTAINER_WHEN_DONE} \
             -v ${PIPELINE_STEP_OUTPUT}:/home/output \
             -v ${PIPELINE_SCRIPTS}/conda_flow/pipeline_steps:/home/scripts \
             -v ${CONDA_RECIPE_DIR}:/home/conda_build_recipe \
-            ${A6I_CONDABUILD_SERVER} & 2>/tmp/error  # run in the background so rest of this script can proceed
+            ${_CFG__CONDABUILD_SERVER} & 2>/tmp/error  # run in the background so rest of this script can proceed
 abort_on_error
 
 echo "${_SVC__INFO_PROMPT} ...waiting for condabuild server to start..."

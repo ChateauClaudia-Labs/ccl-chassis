@@ -17,7 +17,7 @@ echo
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
 
-echo "${_SVC__INFO_PROMPT} About to prepare script to be run in  Windows buildS virtual environment..."
+echo "${_SVC__INFO_PROMPT} About to prepare script to be run in  Windows conda virtual environment..."
 
 # Comment this environment variable if we want to keep the Conda virtual environment (e.g., to inspect problems) 
 # after this script ends
@@ -64,7 +64,7 @@ echo
 echo "${_SVC__INFO_PROMPT} ... these environment variables will be set in the script ..."
 # Environment variables to include in the Windows bash script we will be calling:
 #
-echo "WIN_ANACONDA_DIR:                              ${WIN_ANACONDA_DIR}" # This comes from pipeline_definition.sh
+echo "WIN_ANACONDA_DIR:                              ${_CFG__WIN_ANACONDA_DIR}" # This comes from pipeline_definition.sh
 echo "WIN_OUTPUT_DIR:                                ${WIN_OUTPUT_DIR}"
 echo "WIN_ERR_PROMPT:                                ${WIN_ERR_PROMPT}"
 echo "WIN_TIMESTAMP:                                 ${WIN_TIMESTAMP}"
@@ -92,9 +92,9 @@ echo
 #   will have paths using "#", as the calls to sed would then fail
 #
 
-echo "${_SVC__INFO_PROMPT} ...inserting export WIN_ANACONDA_DIR=$(echo $WIN_ANACONDA_DIR)"
+echo "${_SVC__INFO_PROMPT} ...inserting export WIN_ANACONDA_DIR=$(echo $_CFG__WIN_ANACONDA_DIR)"
 echo
-sed -i "1s#^#export WIN_ANACONDA_DIR=$(echo $WIN_ANACONDA_DIR)\n#" ${SCRIPT_TO_RUN}
+sed -i "1s#^#export WIN_ANACONDA_DIR=$(echo $_CFG__WIN_ANACONDA_DIR)\n#" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
 echo "      export WIN_OUTPUT_DIR=$(echo $WIN_OUTPUT_DIR)"
@@ -131,7 +131,7 @@ echo "${_SVC__INFO_PROMPT}            (this might take a 5-10 minutes...)"
 #
 WIN_SCRIPT_TO_RUN=$(to_windows_path ${SCRIPT_TO_RUN})
 
-${WIN_BASH_EXE} ${WIN_SCRIPT_TO_RUN}                                   2>/tmp/error
+${_CFG__WIN_BASH_EXE} ${WIN_SCRIPT_TO_RUN}                                   2>/tmp/error
 abort_on_error
 
 echo

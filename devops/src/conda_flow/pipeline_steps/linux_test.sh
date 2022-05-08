@@ -111,12 +111,12 @@ echo                                                                            
 
 echo "[A6I_TEST_CONTAINER] =========== Installing test database..."                                         &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
-echo "[A6I_TEST_CONTAINER]  ...git clone ${APODEIXI_TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH}"        &>> ${TEST_LOG}
+echo "[A6I_TEST_CONTAINER]  ...git clone ${_CFG__TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH}"        &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER]              (current directory for git clone is $(pwd)"                         &>> ${TEST_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action takes
 SECONDS=0
 echo                                                                                            &>> ${TEST_LOG}
-git clone  ${APODEIXI_TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH}                           1>> ${TEST_LOG} 2>/tmp/error
+git clone  ${_CFG__TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH}                           1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 
 # Compute how long we took in this script

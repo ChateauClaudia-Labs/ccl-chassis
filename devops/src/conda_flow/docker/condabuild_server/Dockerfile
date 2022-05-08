@@ -1,5 +1,5 @@
-ARG UBUNTU_IMAGE
-FROM ${UBUNTU_IMAGE}
+ARG _CFG__UBUNTU_IMAGE
+FROM ${_CFG__UBUNTU_IMAGE}
 RUN apt update && apt upgrade -y
 
 # Get GIT
@@ -19,15 +19,15 @@ RUN if [ -f /tmp/anaconda.sh ]; then rm /tmp/anaconda.sh; fi
 #
 #        https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh
 #     
-ARG ANACONDA_VERSION                                               
-RUN cd /tmp && curl https://repo.anaconda.com/archive/Anaconda3-${ANACONDA_VERSION}.sh --output anaconda.sh
+ARG _CFG__ANACONDA_VERSION                                               
+RUN cd /tmp && curl https://repo.anaconda.com/archive/Anaconda3-${_CFG__ANACONDA_VERSION}.sh --output anaconda.sh
 
 
 # Step 2: Verify data integrity: the sha256sum on the installer must match the expected hash from
 #           https://docs.anaconda.com/anaconda/install/hashes/lin-3-64/
 #
 #   This requires some text manipulation to compute as string $HASH_FOUND that we can compare about the
-#   expected $ANACONDA_SHA that was set in pipeline_definition.sh
+#   expected $_CFG__ANACONDA_SHA that was set in pipeline_definition.sh
 
 #   First: given that the sha256sum command will return something like 
 #
@@ -38,15 +38,15 @@ RUN cd /tmp && curl https://repo.anaconda.com/archive/Anaconda3-${ANACONDA_VERSI
 #
 #           c7554d41336280bddc6a754c9b6e37e1ea42aad95ad6f80629602c5aec3a7b44
 #   
-#   Second, when we compare the hash we found to the hash we expected (i.e., to $ANACONDA_SHA as defined in
+#   Second, when we compare the hash we found to the hash we expected (i.e., to $_CFG__ANACONDA_SHA as defined in
 #       pipeline_definition.sh), we need to cause this build to fail if the verification fails, so 
 #       we use an if statement for that.
 #
-ARG ANACONDA_SHA
+ARG _CFG__ANACONDA_SHA
 RUN cd /tmp && export HASH_FOUND=$(sha256sum anaconda.sh | awk '{print $1;}') \
-        && echo "Expecting:    $ANACONDA_SHA" \
+        && echo "Expecting:    $_CFG__ANACONDA_SHA" \
         && echo "Found:        $HASH_FOUND" \
-        && if [ "${HASH_FOUND}" = "${ANACONDA_SHA}" ]; \
+        && if [ "${HASH_FOUND}" = "${_CFG__ANACONDA_SHA}" ]; \
                 then echo "Anaconda installer's hash verification succeeded"; \
                 else echo "Anaconda installer's hash verification failed" && exit 1; \
             fi 

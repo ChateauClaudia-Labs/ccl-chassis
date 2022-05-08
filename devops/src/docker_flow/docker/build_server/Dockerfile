@@ -1,5 +1,5 @@
-ARG UBUNTU_IMAGE
-FROM ${UBUNTU_IMAGE}
+ARG _CFG__UBUNTU_IMAGE
+FROM ${_CFG__UBUNTU_IMAGE}
 RUN apt update && apt upgrade -y
 
 # Get required software (GIT, Python). 
@@ -9,10 +9,10 @@ RUN apt update && apt upgrade -y
 # GOTCHA Install GIT **after** Python, not before. For some weird reason, installing GIT first will cause the Docker
 #       build of the image to "fail" because it will prompt a non-interactive user to select a timezone, and the build
 #       will then hang.
-ARG UBUNTU_PYTHON_PACKAGE
-RUN apt install -y ${UBUNTU_PYTHON_PACKAGE}
+ARG _CFG__UBUNTU_PYTHON_PACKAGE
+RUN apt install -y ${_CFG__UBUNTU_PYTHON_PACKAGE}
 RUN apt install -y python3-pip
-RUN ln -s $(which ${UBUNTU_PYTHON_PACKAGE}) /usr/bin/python
+RUN ln -s $(which ${_CFG__UBUNTU_PYTHON_PACKAGE}) /usr/bin/python
 RUN apt install -y git
 
 

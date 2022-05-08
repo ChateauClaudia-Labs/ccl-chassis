@@ -18,17 +18,17 @@ _CFG__pipeline_short_description() {
     echo "Used to test deployment pipeline step"
 }
 
-export UBUNTU_IMAGE="ubuntu:20.04"
+export _CFG__UBUNTU_IMAGE="ubuntu:20.04"
 export PYTHON_VERSION="3.9"
 
 # Release version that is to be built
 export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.8"
 export _CFG__DEPLOYABLE_VERSION="0.9.8"
 
-export APODEIXI_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"
+export _CFG__DEPLOYABLE_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"
 
 # Define which server image to use for the build. Determines version of Ubuntu and Python for the container where the build runs
-export A6I_BUILD_SERVER="a6i-build-server"
+export _CFG__BUILD_SERVER="a6i-build-server"
 
 # Defines the name (& tag) for the Apodeixi image to be created by the pipeline. If there is no tag, Docker will
 # by default put a tag of ":latest"

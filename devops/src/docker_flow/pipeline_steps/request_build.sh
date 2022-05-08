@@ -31,7 +31,7 @@ docker run ${REMOVE_CONTAINER_WHEN_DONE} \
             -e _CFG__DEPLOYABLE=${_CFG__DEPLOYABLE} \
             ${_CFG__BUILD_DOCKER_OPTIONS} \
             -v ${PIPELINE_STEP_OUTPUT}:/home/output -v ${PIPELINE_SCRIPTS}/docker_flow/pipeline_steps:/home/scripts \
-            ${A6I_BUILD_SERVER} & 2>/tmp/error  # run in the background so rest of this script can proceed
+            ${_CFG__BUILD_SERVER} & 2>/tmp/error  # run in the background so rest of this script can proceed
 abort_on_error
 
 echo "${_SVC__INFO_PROMPT} ...waiting for build server to start..."

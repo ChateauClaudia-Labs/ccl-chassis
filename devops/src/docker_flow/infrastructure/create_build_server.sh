@@ -23,10 +23,10 @@ export SETUP_INFRA_LOG="${LOGS_DIR}/${TIMESTAMP}_setup_infra.txt"
 SECONDS=0
 
 echo
-echo "${_SVC__INFO_PROMPT} ---------------- Building build server's image '${A6I_BUILD_SERVER}'"
+echo "${_SVC__INFO_PROMPT} ---------------- Building build server's image '${_CFG__BUILD_SERVER}'"
 echo
-echo "${_SVC__INFO_PROMPT} UBUNTU_IMAGE=${UBUNTU_IMAGE}"
-echo "${_SVC__INFO_PROMPT} UBUNTU_PYTHON_PACKAGE=${UBUNTU_PYTHON_PACKAGE}"
+echo "${_SVC__INFO_PROMPT} _CFG__UBUNTU_IMAGE=${_CFG__UBUNTU_IMAGE}"
+echo "${_SVC__INFO_PROMPT} _CFG__UBUNTU_PYTHON_PACKAGE=${_CFG__UBUNTU_PYTHON_PACKAGE}"
 echo
 
 export DOCKERFILE_DIR=${PIPELINE_SCRIPTS}/docker_flow/docker/build_server
@@ -35,7 +35,7 @@ echo "${_SVC__INFO_PROMPT} Current directory is ${DOCKERFILE_DIR}"
 echo
 echo "${_SVC__INFO_PROMPT} Running Docker build..."
 echo
-docker build --build-arg UBUNTU_IMAGE --build-arg UBUNTU_PYTHON_PACKAGE -t ${A6I_BUILD_SERVER} . 1>> ${SETUP_INFRA_LOG} 2>/tmp/error
+docker build --build-arg _CFG__UBUNTU_IMAGE --build-arg _CFG__UBUNTU_PYTHON_PACKAGE -t ${_CFG__BUILD_SERVER} . 1>> ${SETUP_INFRA_LOG} 2>/tmp/error
 abort_on_error
 
 # Compute how long we took in this script

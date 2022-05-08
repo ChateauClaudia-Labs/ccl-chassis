@@ -25,42 +25,7 @@ echo
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
 
-# We expect the test database to alreay have an `apodeixi_config.toml` file geared to development-time testing.
-# That means that the paths referenced in that `apodeixi_config.toml` file are expected to include hard-coded
-# directories for the developer's machine.
-#
-# These hard-coded directories in the host won't work when the tests are run inside the Apodeixi container, so we 
-# will have to replace them by paths in the container file system. However, we don't want to modify the
-# test database's `apodeixi_config.toml` file since its host hard-coded paths are needed at development time.
-# Therefore, the container will apply this logic when running testrun.sh:
-#
-#   1. Clone the GIT repo that contains the test database into /home/work, creating /home/work/apodeixi-testdb inside
-#      the container
-#   2. Rely on the environment variable $INJECTED_CONFIG_DIRECTORY to locate the folder where the Apodeixi configuration
-#      file resides. 
-#      This environment variable is needed to address the following problem with Apodeixi's test harness, and specifcially by
-#      apodeixi.testing_framework.a6i_skeleton_test.py:
-#
-#           The test harness by default assumes that the Apodeixi configuration is found in 
-#
-#                    '../../../../test_db'
-#
-#           with the path relative to that of `a6i_skeleton_test.py` in the container, which is 
-#
-#                   /usr/local/lib/python3.9/dist-packages/apodeixi/testing_framework/a6i_skeleton_test.py
-#
-#      because of the way how pip installed Apodeixi inside the container. 
-#
-#      This is addresed by:
-#           - setting the environment variable $INJECTED_CONFIG_DIRECTORY to /home/apodeixi_testdb_config
-#           - this will cause the test harness to look for Apodeixi's configuration in the folder $INJECTED_CONFIG_DIRECTORY
-#           - additionally, read the value of another environment variable, $TEST_APODEIXI_CONFIG_DIRECTORY, from the
-#             pipeline definition (in pipeline_album/<pipeline_id>/pipeline_definition.sh)
-#           - this way the pipeline's choice for what apodeixi_config.toml to use for testing will come from looking
-#             in $TEST_APODEIXI_CONFIG_DIRECTORY in the host
-#           - lastly, we mount $TEST_APODEIXI_CONFIG_DIRECTORY as /home/apodeixi_testdb_config in the container, which is
-#             where the container-run test harness will expect it (since that's the value of $INJECTED_CONFIG_DIRECTORY)
-#
+
 
 echo "${_SVC__INFO_PROMPT} About to start Linux test container..."
 
@@ -70,10 +35,6 @@ export REMOVE_CONTAINER_WHEN_DONE=1
 # Call application function to set _CFG__LINUX_TEST_CONDA_OPTIONS
 _CFG__set_linux_test_conda_options
 
-# Comments on these options to starting the container:
-#   - $APODEIXI_CONFIG_DIRECTORY environment varialbe is not needed for tests, but saves setup if we have to 
-#       debug within the container
-#
 docker run  -e TIMESTAMP=${TIMESTAMP} \
             -e _CFG__DEPLOYABLE_VERSION=${_CFG__DEPLOYABLE_VERSION} \
             -e _CFG__DEPLOYABLE_GIT_BRANCH=${_CFG__DEPLOYABLE_GIT_BRANCH} \
@@ -82,7 +43,7 @@ docker run  -e TIMESTAMP=${TIMESTAMP} \
             -v ${PIPELINE_STEP_OUTPUT}:/home/output \
             -v ${PIPELINE_SCRIPTS}/conda_flow/pipeline_steps:/home/scripts \
             ${_CFG__LINUX_TEST_CONDA_OPTIONS} \
-            ${A6I_CONDABUILD_SERVER} & 2>/tmp/error # run in the background so rest of this script can proceed
+            ${_CFG__CONDABUILD_SERVER} & 2>/tmp/error # run in the background so rest of this script can proceed
 abort_on_error
 
 echo "${_SVC__INFO_PROMPT} ...waiting for Linux test container to start..."

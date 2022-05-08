@@ -23,10 +23,10 @@ export SETUP_INFRA_LOG="${LOGS_DIR}/${TIMESTAMP}_setup_infra.txt"
 SECONDS=0
 
 echo
-echo "${_SVC__INFO_PROMPT} ---------------- Building condabuild server's image '${A6I_CONDABUILD_SERVER}'"
+echo "${_SVC__INFO_PROMPT} ---------------- Building condabuild server's image '${_CFG__CONDABUILD_SERVER}'"
 echo
-echo "${_SVC__INFO_PROMPT} UBUNTU_IMAGE=${UBUNTU_IMAGE}"
-echo "${_SVC__INFO_PROMPT} ANACONDA_VERSION=${ANACONDA_VERSION}"
+echo "${_SVC__INFO_PROMPT} _CFG__UBUNTU_IMAGE=${_CFG__UBUNTU_IMAGE}"
+echo "${_SVC__INFO_PROMPT} _CFG__ANACONDA_VERSION=${_CFG__ANACONDA_VERSION}"
 echo
 
 export DOCKERFILE_DIR=${PIPELINE_SCRIPTS}/conda_flow/docker/condabuild_server
@@ -35,10 +35,10 @@ echo "${_SVC__INFO_PROMPT} Current directory is ${DOCKERFILE_DIR}"
 echo
 echo "${_SVC__INFO_PROMPT} Running Docker build... (this may take a few minutes)"
 echo
-docker build    --build-arg UBUNTU_IMAGE \
-                --build-arg ANACONDA_VERSION \
-                --build-arg ANACONDA_SHA \
-                -t ${A6I_CONDABUILD_SERVER} . 1>> ${SETUP_INFRA_LOG} 2>/tmp/error
+docker build    --build-arg _CFG__UBUNTU_IMAGE \
+                --build-arg _CFG__ANACONDA_VERSION \
+                --build-arg _CFG__ANACONDA_SHA \
+                -t ${_CFG__CONDABUILD_SERVER} . 1>> ${SETUP_INFRA_LOG} 2>/tmp/error
 abort_on_error
 
 # Compute how long we took in this script

@@ -67,12 +67,12 @@ duration=$SECONDS                                                        &>> ${T
 echo "[A6I_TEST_CONTAINER] ...git successfully installed in container in $duration sec" &>> ${TEST_LOG}
 echo                                                        &>> ${TEST_LOG}
 
-echo "[A6I_TEST_CONTAINER] =========== git clone ${APODEIXI_TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH}" &>> ${TEST_LOG}
+echo "[A6I_TEST_CONTAINER] =========== git clone ${_CFG__TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH}" &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER]              (current directory for git clone is $(pwd)"                     &>> ${TEST_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action took
 SECONDS=0
 echo &>> ${TEST_LOG}
-git clone  ${APODEIXI_TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH} 1>> ${TEST_LOG} 2>/tmp/error
+git clone  ${_CFG__TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH} 1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 
 # Compute how long we took in this script
@@ -85,7 +85,7 @@ echo &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER] =========== Working area and Python version" &>> ${TEST_LOG}
 echo &>> ${TEST_LOG}
 
-cd /usr/local/lib/${UBUNTU_PYTHON_PACKAGE}/dist-packages/${_CFG__DEPLOYABLE} &>> ${TEST_LOG}
+cd /usr/local/lib/${_CFG__UBUNTU_PYTHON_PACKAGE}/dist-packages/${_CFG__DEPLOYABLE} &>> ${TEST_LOG}
 
 echo "[A6I_TEST_CONTAINER] Current directory is $(pwd)" &>> ${TEST_LOG}
 echo &>> ${TEST_LOG}
