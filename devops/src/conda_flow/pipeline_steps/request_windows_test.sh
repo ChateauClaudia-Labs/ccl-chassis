@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# This script conducts acceptance tests for Apodeixi by using a specific one-off virtual environment to 
-# do a Conda install of an Apodeixi Windows distribution and then running tests on it.
+# This script conducts acceptance tests for the deployable (assumed to be a Python module) by using a specific 
+# one-off virtual environment to do a Conda install of a Windows distribution for the deployable and then running tests on it.
 #
 
 export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
@@ -58,7 +58,9 @@ fi
 
 WIN_WORKING_DIR=$(to_windows_path ${WORKING_DIR})
 
-WIN_APODEIXI_TESTDB_GIT_URL="${_CFG__TESTDB_GIT_URL}"
+WIN_TESTDB_GIT_URL="${_CFG__TESTDB_GIT_URL}"
+WIN_TESTDB_REPO_NAME="${_CFG__TESTDB_REPO_NAME}"
+
 WIN_DEPLOYABLE_GIT_BRANCH="${_CFG__DEPLOYABLE_GIT_BRANCH}"
 WIN_DEPLOYABLE_VERSION="${_CFG__DEPLOYABLE_VERSION}"
 WIN_DEPLOYABLE="${_CFG__DEPLOYABLE}"
@@ -74,7 +76,8 @@ echo "WIN_ANACONDA_DIR:                             ${_CFG__WIN_ANACONDA_DIR}" #
 echo "WIN_OUTPUT_DIR:                               ${WIN_OUTPUT_DIR}"
 echo "WIN_WORKING_DIR:                              ${WIN_WORKING_DIR}"
 
-echo "WIN_APODEIXI_TESTDB_GIT_URL:                  ${WIN_APODEIXI_TESTDB_GIT_URL}"
+echo "WIN_TESTDB_GIT_URL:                           ${WIN_TESTDB_GIT_URL}"
+echo "WIN_TESTDB_REPO_NAME:                         ${WIN_TESTDB_REPO_NAME}"
 echo "WIN_DEPLOYABLE_GIT_BRANCH:                    ${WIN_DEPLOYABLE_GIT_BRANCH}"
 echo "WIN_DEPLOYABLE_VERSION:                       ${WIN_DEPLOYABLE_VERSION}"
 echo "WIN_DEPLOYABLE:                               ${WIN_DEPLOYABLE}"
@@ -99,6 +102,7 @@ abort_on_error
 #   I chose the latter for simplicy, using the character '#' as the sed delimeter. Hopefully no pipeline definition
 #   will have paths using "#", as the calls to sed would then fail
 #
+
 _CFG__apply_windows_test_conda_options ${SCRIPT_TO_RUN}
 
 echo "${_SVC__INFO_PROMPT} ...inserting export WIN_ANACONDA_DIR=$(echo $_CFG__WIN_ANACONDA_DIR)"
@@ -114,8 +118,12 @@ echo "      export WIN_WORKING_DIR=$(echo $WIN_WORKING_DIR)"
 sed -i "1s#^#export WIN_WORKING_DIR=$(echo $WIN_WORKING_DIR)\n#" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
-echo "      export WIN_APODEIXI_TESTDB_GIT_URL=$(echo $WIN_APODEIXI_TESTDB_GIT_URL)"
-sed -i "1s#^#export WIN_APODEIXI_TESTDB_GIT_URL=$(echo $WIN_APODEIXI_TESTDB_GIT_URL)\n#" ${SCRIPT_TO_RUN}
+echo "      export WIN_TESTDB_GIT_URL=$(echo $WIN_TESTDB_GIT_URL)"
+sed -i "1s#^#export WIN_TESTDB_GIT_URL=$(echo $WIN_TESTDB_GIT_URL)\n#" ${SCRIPT_TO_RUN}
+abort_on_error
+echo
+echo "      export WIN_TESTDB_REPO_NAME=$(echo $WIN_TESTDB_REPO_NAME)"
+sed -i "1s#^#export WIN_TESTDB_REPO_NAME=$(echo $WIN_TESTDB_REPO_NAME)\n#" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
 echo "      export WIN_DEPLOYABLE_GIT_BRANCH=$(echo $WIN_DEPLOYABLE_GIT_BRANCH)"
@@ -145,7 +153,7 @@ abort_on_error
 echo
 echo "${_SVC__INFO_PROMPT} ... done preparing the script that must be run in virtual environment"
 echo
-echo "${_SVC__INFO_PROMPT} Attempting to run tests for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
+echo "${_SVC__INFO_PROMPT} Attempting to run tests for ${_CFG__DEPLOYABLE} branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
 echo "${_SVC__INFO_PROMPT}            (this might take a 4-5 minutes...)"
 
 # When we run the script, we must refer to it by a Windows path, even if above we manipulated it in Linux and hence have

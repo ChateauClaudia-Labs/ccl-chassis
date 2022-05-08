@@ -37,8 +37,6 @@ fi
 
 # Want to find /c/Users/aleja/Documents/CodeImages/Technos/Anaconda3/Scripts/conda
 export PATH=${WIN_ANACONDA_DIR}/Scripts:$PATH      
-# Pick the first file in the distribution folder that seems to be an Apodeixi distribution for the version of interest
-#
 DISTRIBUTION_FOLDER=${WIN_OUTPUT_DIR}/dist/win-64
 if [ ! -d ${DISTRIBUTION_FOLDER} ]
     then
@@ -47,13 +45,16 @@ if [ ! -d ${DISTRIBUTION_FOLDER} ]
         echo $error                             
         exit 1
 fi
+# Pick the first file in the distribution folder that seems to be s distribution for the deployable
+# for the version of interest
+#
 echo "[A6I_WIN_TEST_VIRTUAL_ENV] Looking for a file ${WIN_DEPLOYABLE}-${WIN_DEPLOYABLE_VERSION}* in  ${DISTRIBUTION_FOLDER}" &>> ${TEST_LOG}
-export APODEIXI_DISTRIBUTION=$(echo $(ls ${DISTRIBUTION_FOLDER} | grep "${WIN_DEPLOYABLE}-${WIN_DEPLOYABLE_VERSION}") | awk '{print $1}') \
+export DEPLOYABLE_DISTRIBUTION=$(echo $(ls ${DISTRIBUTION_FOLDER} | grep "${WIN_DEPLOYABLE}-${WIN_DEPLOYABLE_VERSION}") | awk '{print $1}') \
                 1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
-if [ -z ${APODEIXI_DISTRIBUTION} ]
+if [ -z ${DEPLOYABLE_DISTRIBUTION} ]
     then
-        error="Could not find Apodeixi distribution. Aborting"
+        error="Could not find ${WIN_DEPLOYABLE} distribution. Aborting"
         echo "[A6I_WIN_TEST_VIRTUAL_ENV] $error"       &>> ${TEST_LOG}
         echo $error                             
         exit 1
@@ -69,11 +70,11 @@ echo                                                                            
 cd ${WIN_WORKING_DIR}                                                                                           &>> ${TEST_LOG}
 echo "[A6I_WIN_TEST_VIRTUAL_ENV] Current directory is $(pwd)"                                                     &>> ${TEST_LOG}
 echo "[A6I_WIN_TEST_VIRTUAL_ENV] Current user is is $(whoami)"                                                    &>> ${TEST_LOG}
-echo "[A6I_WIN_TEST_VIRTUAL_ENV] Distribution is ${APODEIXI_DISTRIBUTION}"                                        &>> ${TEST_LOG}
+echo "[A6I_WIN_TEST_VIRTUAL_ENV] Distribution is ${DEPLOYABLE_DISTRIBUTION}"                                        &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 
 
-echo "[A6I_WIN_TEST_VIRTUAL_ENV] =========== Installing Apodeixi and its dependencies..."                         &>> ${TEST_LOG}
+echo "[A6I_WIN_TEST_VIRTUAL_ENV] =========== Installing ${WIN_DEPLOYABLE} and its dependencies..."                         &>> ${TEST_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action takes
 SECONDS=0
 echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ... creating virtual environment..."                                            &>> ${TEST_LOG}
@@ -92,27 +93,28 @@ echo                                                                            
 #       of doing 'conda activate <env>'
 
 echo                                                                                                        &>> ${TEST_LOG}
-echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ... conda install -n ${VIRTUAL_ENV} ${APODEIXI_DISTRIBUTION}..."                 &>> ${TEST_LOG}
+echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ... conda install -n ${VIRTUAL_ENV} ${DEPLOYABLE_DISTRIBUTION}..."                 &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
-yes " y" | conda install -n ${VIRTUAL_ENV} ${DISTRIBUTION_FOLDER}/${APODEIXI_DISTRIBUTION}           1>> ${TEST_LOG} 2>/tmp/error
+yes " y" | conda install -n ${VIRTUAL_ENV} ${DISTRIBUTION_FOLDER}/${DEPLOYABLE_DISTRIBUTION}           1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 echo                                                                                                        &>> ${TEST_LOG}
-# At this point the virtual environment if pretty empty - it only has Apodeixi, but lacks Python and lacks dependencies.
+# At this point the virtual environment if pretty empty - it only has the deployable,
+# but lacks Python and lacks dependencies.
 # Both will be brought in if we install python
-echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ... now installing Apodeixi dependencies..."                             &>> ${TEST_LOG}
+echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ... now installing ${WIN_DEPLOYABLE} dependencies..."                             &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 yes " y" | conda install -n ${VIRTUAL_ENV} python                                                           &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 duration=$SECONDS                                                                                           &>> ${TEST_LOG}
-echo "[A6I_WIN_TEST_VIRTUAL_ENV] ...${APODEIXI_DISTRIBUTION} successfully installed in container in $duration sec" &>> ${TEST_LOG}
+echo "[A6I_WIN_TEST_VIRTUAL_ENV] ...${DEPLOYABLE_DISTRIBUTION} successfully installed in container in $duration sec" &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 
 
 echo "[A6I_WIN_TEST_VIRTUAL_ENV] =========== Installing test database..."                                         &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 # GOTCHA
-#       Our working folder is very nested in the file hiearchy, and if we insist on doing a git clond on that
+#       Our working folder is very nested in the file hiearchy, and if we insist on doing a git clone on that
 #       working folder we will probably get "Filename too long" error messages like these:
 #
 #                   error: unable to create file results_data/8101/foreign_key.milestones_big_rock_version/fkey.ml_2_br.T7_cli_output          post --timestamp              _EXPECTED.txt: Filename too long
@@ -121,35 +123,35 @@ echo                                                                            
 #
 #   So to address this, we will do git clone of the test db into a different folder
 #
-export GIT_CLONE_DIR="$(cd ~/tmp && pwd)/${VIRTUAL_ENV}"
+export TESTDB_REPO_PARENT_DIR="$(cd ~/tmp && pwd)/${VIRTUAL_ENV}"
 
-echo "[A6I_WIN_TEST_VIRTUAL_ENV] Will clone test database in ${GIT_CLONE_DIR}"                &>> ${TEST_LOG}
+echo "[A6I_WIN_TEST_VIRTUAL_ENV] Will clone test database into ${TESTDB_REPO_PARENT_DIR}"                &>> ${TEST_LOG}
 echo                                                                                            &>> ${TEST_LOG}
 
-if [ -d $GIT_CLONE_DIR ]
+if [ -d $TESTDB_REPO_PARENT_DIR ]
     then
         # Clear any pre-existing content
-        rm -rf $GIT_CLONE_DIR                       &>> ${TEST_LOG}
+        rm -rf $TESTDB_REPO_PARENT_DIR                       &>> ${TEST_LOG}
         abort_testrun_on_error
 fi
-mkdir $GIT_CLONE_DIR                                &>> ${TEST_LOG}
+mkdir $TESTDB_REPO_PARENT_DIR                                &>> ${TEST_LOG}
 abort_testrun_on_error
-cd $GIT_CLONE_DIR                                   &>> ${TEST_LOG}
+cd $TESTDB_REPO_PARENT_DIR                                   &>> ${TEST_LOG}
 abort_testrun_on_error
 
 
-echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ...git clone ${WIN_APODEIXI_TESTDB_GIT_URL} --branch ${WIN_DEPLOYABLE_GIT_BRANCH}"        &>> ${TEST_LOG}
+echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ...git clone ${WIN_TESTDB_GIT_URL} --branch ${WIN_DEPLOYABLE_GIT_BRANCH}"        &>> ${TEST_LOG}
 echo "[A6I_WIN_TEST_VIRTUAL_ENV]              (current directory for git clone is $(pwd)"                         &>> ${TEST_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action takes
 SECONDS=0
 echo                                                                                            &>> ${TEST_LOG}
-git clone  ${WIN_APODEIXI_TESTDB_GIT_URL} --branch ${WIN_DEPLOYABLE_GIT_BRANCH}                   1>> ${TEST_LOG} 2>/tmp/error
+git clone  ${WIN_TESTDB_GIT_URL} --branch ${WIN_DEPLOYABLE_GIT_BRANCH}                   1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 
 echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ...git checkout"        &>> ${TEST_LOG}
 echo "[A6I_WIN_TEST_VIRTUAL_ENV]              (current directory for git checkout is $(pwd)"                         &>> ${TEST_LOG}
 echo  
-cd $GIT_CLONE_DIR/apodeixi-testdb                                   &>> ${TEST_LOG}
+cd $TESTDB_REPO_PARENT_DIR/${WIN_TESTDB_REPO_NAME}                                   &>> ${TEST_LOG}
 abort_testrun_on_error                                                                                          &>> ${TEST_LOG}
 git checkout                     1>> ${TEST_LOG} 2>/tmp/error
 
@@ -159,50 +161,12 @@ echo "[A6I_WIN_TEST_VIRTUAL_ENV]         Completed 'git clone' and 'git checkout
 echo                                                                                            &>> ${TEST_LOG}
 
 
-echo "[A6I_WIN_TEST_VIRTUAL_ENV] =========== Making a copy of Apodeixi config file suitable for Window paths"   &>> ${TEST_LOG}
-echo                                                                                &>> ${TEST_LOG}
-
-# We can't use the same apodeixi_config.toml in Windows as the one in Linux, since paths are different. So we will
-# assume that the pipeline definition has a Linux-oriented apodeixi_config_toml to inject, and now we make a copy to
-# the working folder and modify its paths to Windows. That will become the $INJECTED_CONFIG_DIRECTORY we end up using
-# when running the tests
-#
-export INJECTED_CONFIG_DIRECTORY="${WIN_WORKING_DIR}/apodeixi_testdb_config"
-if [ ! -d $INJECTED_CONFIG_DIRECTORY ]
-    then
-        mkdir $INJECTED_CONFIG_DIRECTORY
-fi
-# Copy Linux-oriented test config file to the working area from where Windows will take it
-cp "${WIN_INJECTED_CONFIG_DIRECTORY}/apodeixi_config.toml" ${INJECTED_CONFIG_DIRECTORY}/
-
-# We use sed to replace 'home/work' in the Apodeixi config file. Since "/" is part of the text
-# being replaced, we choose a different sed delimeter (we use "#" instead of the default delimeter "/")
-sed -i "s#/home/work/#${GIT_CLONE_DIR}/#g" ${INJECTED_CONFIG_DIRECTORY}/apodeixi_config.toml
-
-#
-# GOTCHA:
-#       At this point, GIT_CLONE_DIR is something like
-#
-#               /c/Users/aleja/tmp/test_220501.144650
-#
-#       but we need ${INJECTED_CONFIG_DIRECTORY}/apodeixi_config.toml to have paths like 
-#
-#               C:/Users/aleja/tmp/test_220501.144650
-#
-#       to prevent problems when loading the yaml file "/c/Users/aleja/tmp/test_220501.144650/apodeixi-testdb/test_config.yaml"
-#       
-#       So we do another sed call, replacing "/c/" by "C:/"
-#
-sed -i "s#/c/#C:/#g" ${INJECTED_CONFIG_DIRECTORY}/apodeixi_config.toml
-
-echo &>> ${TEST_LOG}
-
 echo "[A6I_WIN_TEST_VIRTUAL_ENV] =========== Working area and Python version"                                     &>> ${TEST_LOG}
 echo                                                                                &>> ${TEST_LOG}
-#cd /home/work/apodeixi &>> ${TEST_LOG}
 
-# Need to work out the Python distribution so we can find the apodeixi folder where to run the tests. 
-# E.g., if Python 3.10.4 was installed, then in Windows apodeixi would have been installed in 
+# Need to work out the Python distribution so we can find the deployable's folder where to run the tests. 
+# E.g., if Python 3.10.4 was installed and the deployable is apodeixi,
+# then in Windows deployable's would have been installed in 
 #
 #       ${WIN_ANACONDA_DIR}/envs/${VIRTUAL_ENV}/lib/site-packages/apodeixi
 #
