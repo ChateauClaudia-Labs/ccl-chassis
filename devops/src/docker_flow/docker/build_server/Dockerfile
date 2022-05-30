@@ -11,6 +11,8 @@ RUN apt update && apt upgrade -y
 #       will then hang.
 ARG _CFG__UBUNTU_PYTHON_PACKAGE
 RUN echo "Will attempt to install ${_CFG__UBUNTU_PYTHON_PACKAGE}"
+# The Python install was failing until this `apt-get update` was added right before it
+RUN apt update
 RUN apt-get install -y ${_CFG__UBUNTU_PYTHON_PACKAGE}
 RUN apt-get install -y python3-pip
 RUN ln -s $(which ${_CFG__UBUNTU_PYTHON_PACKAGE}) /usr/bin/python
