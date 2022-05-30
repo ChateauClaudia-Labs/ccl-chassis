@@ -68,6 +68,7 @@ echo "WIN_ANACONDA_DIR:                              ${_CFG__WIN_ANACONDA_DIR}" 
 echo "WIN_OUTPUT_DIR:                                ${WIN_OUTPUT_DIR}"
 echo "WIN_ERR_PROMPT:                                ${WIN_ERR_PROMPT}"
 echo "WIN_TIMESTAMP:                                 ${WIN_TIMESTAMP}"
+echo "_CFG__CONDA_VERSION:                           ${_CFG__CONDA_VERSION}"
 echo "WIN_CONDA_RECIPE:                              ${WIN_CONDA_RECIPE}"
 echo "WIN_CONDA_RECIPE_DIR:                          ${WIN_CONDA_RECIPE_DIR}"
 echo "WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE:      ${WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE}"
@@ -107,6 +108,10 @@ abort_on_error
 echo
 echo "      export WIN_TIMESTAMP=$(echo $WIN_TIMESTAMP)"
 sed -i "1s/^/export WIN_TIMESTAMP=$(echo $WIN_TIMESTAMP)\n/" ${SCRIPT_TO_RUN}
+abort_on_error
+echo
+echo "      export _CFG__CONDA_VERSION=$(echo $_CFG__CONDA_VERSION)"
+sed -i "1s/^/export _CFG__CONDA_VERSION=$(echo $_CFG__CONDA_VERSION)\n/" ${SCRIPT_TO_RUN}
 abort_on_error
 echo
 echo "      export WIN_CONDA_RECIPE=$(echo $WIN_CONDA_RECIPE)"

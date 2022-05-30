@@ -81,9 +81,9 @@ fi
 if [ -z "$RUN_TIMESTAMP" ]
   then
     export RUN_TIMESTAMP=${TIMESTAMP}
-    echo "${_SVC__INFO_PROMPT} Running pipeline '${PIPELINE_NAME}' with run ID '${RUN_TIMESTAMP}'"
-    echo
 fi
+echo "${_SVC__INFO_PROMPT} Running pipeline '${PIPELINE_NAME}' with run ID '${RUN_TIMESTAMP}'"
+echo
 
 # Check pipeline album contains a pipeline with the given ID
   [ ! -d "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}" ] && echo \

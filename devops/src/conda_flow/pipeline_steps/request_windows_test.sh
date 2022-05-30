@@ -83,6 +83,8 @@ echo "WIN_DEPLOYABLE_VERSION:                       ${WIN_DEPLOYABLE_VERSION}"
 echo "WIN_DEPLOYABLE:                               ${WIN_DEPLOYABLE}"
 echo "WIN_ERR_PROMPT:                               ${WIN_ERR_PROMPT}"
 echo "WIN_TIMESTAMP:                                ${WIN_TIMESTAMP}"
+echo "_CFG__DEPLOYABLE:                             ${_CFG__DEPLOYABLE}"
+
 
 echo "WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE:     ${WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE}"
 echo
@@ -145,7 +147,10 @@ echo
 echo "      export WIN_TIMESTAMP=$(echo $WIN_TIMESTAMP)"
 sed -i "1s/^/export WIN_TIMESTAMP=$(echo $WIN_TIMESTAMP)\n/" ${SCRIPT_TO_RUN}
 abort_on_error
-
+echo
+echo "      export _CFG__DEPLOYABLE=$(echo $_CFG__DEPLOYABLE)"
+sed -i "1s/^/export _CFG__DEPLOYABLE=$(echo $_CFG__DEPLOYABLE)\n/" ${SCRIPT_TO_RUN}
+abort_on_error
 echo
 echo "      export WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE=$(echo $WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE)"
 sed -i "1s/^/export WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE=$(echo $WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE)\n/" ${SCRIPT_TO_RUN}

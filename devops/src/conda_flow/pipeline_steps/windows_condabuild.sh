@@ -54,33 +54,40 @@ export BASE_CONDA_EXE=${WIN_ANACONDA_DIR}/Scripts/conda
 export VIRTUAL_ENV="condabuild_${WIN_TIMESTAMP}"
 export VIRTUAL_ENV_CONDA_BLD_EXE=${WIN_ANACONDA_DIR}/envs/${VIRTUAL_ENV}/Scripts/conda-build
 
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] ---------- Windows conda build logs ---------- $(date) ---------- " &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] ---------- Windows conda build logs ---------- $(date) ---------- " &>> ${CONDA_BUILD_LOG}
 
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] Hostname=$(hostname)"                                 &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] Hostname=$(hostname)"                                 &>> ${CONDA_BUILD_LOG}
 echo                                                                                  &>> ${CONDA_BUILD_LOG}
 
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] Current directory is $(pwd)"                          &>> ${CONDA_BUILD_LOG}
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] Current user is $(whoami)"                            &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] Current directory is $(pwd)"                          &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] Current user is $(whoami)"                            &>> ${CONDA_BUILD_LOG}
 
 echo                                                                                  &>> ${CONDA_BUILD_LOG}
 
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] =========== conda-build  ${WIN_CONDA_RECIPE}"     &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] =========== conda-build  ${WIN_CONDA_RECIPE}"     &>> ${CONDA_BUILD_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action took
 SECONDS=0
 echo                                                                                  &>> ${CONDA_BUILD_LOG}
-echo "[A6I_WIN_TEST_VIRTUAL_ENV]  ... creating virtual environment..."                &>> ${CONDA_BUILD_LOG}  
+echo "[WIN_BLD_VIRTUAL_ENV]  ... creating virtual environment..."                &>> ${CONDA_BUILD_LOG}  
 echo                                                                                  &>> ${CONDA_BUILD_LOG}
 # Conda virtual environment for installation and test
 yes "y" | ${BASE_CONDA_EXE} create -n ${VIRTUAL_ENV}                                  1>> ${CONDA_BUILD_LOG} 2>/tmp/error
 abort_testrun_on_error
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] Virtual environment is ${VIRTUAL_ENV}"                &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] Virtual environment is ${VIRTUAL_ENV}"                &>> ${CONDA_BUILD_LOG}
 echo                                                                                  &>> ${CONDA_BUILD_LOG}
+
+# Make sure we use a validated version of conda because that sometimes causes build failures.
+# For example, when Conda moved from 4.12 to 4.13 the build broke (happened on May 29, 2022)
+echo "[WIN_BLD_VIRTUAL_ENV] Installing conda=${_CFG__CONDA_VERSION}"             &>> ${CONDA_BUILD_LOG}
+yes "y" | ${BASE_CONDA_EXE} install -n ${VIRTUAL_ENV} conda=${_CFG__CONDA_VERSION}   &>> ${CONDA_BUILD_LOG}
+
 # Get our local conda-build so that distribution built is not put in the base environment's area
+echo "[WIN_BLD_VIRTUAL_ENV] Installing conda-build"                               &>> ${CONDA_BUILD_LOG}
 yes "y" | ${BASE_CONDA_EXE} install -n ${VIRTUAL_ENV} conda-build                     &>> ${CONDA_BUILD_LOG}
 
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] Build executable is ${VIRTUAL_ENV_CONDA_BLD_EXE}"     &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] Build executable is ${VIRTUAL_ENV_CONDA_BLD_EXE}"     &>> ${CONDA_BUILD_LOG}
 echo                                                                                  &>> ${CONDA_BUILD_LOG}
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] Build recipe is ${WIN_CONDA_RECIPE}"                  &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] Build recipe is ${WIN_CONDA_RECIPE}"                  &>> ${CONDA_BUILD_LOG}
 echo                                                                                  &>> ${CONDA_BUILD_LOG}
 ${VIRTUAL_ENV_CONDA_BLD_EXE} ${WIN_CONDA_RECIPE_DIR}/${WIN_CONDA_RECIPE}              &>> ${CONDA_BUILD_LOG}
 if [[ $? != 0 ]]; then
@@ -93,7 +100,7 @@ fi
 # Compute how long we took in this script
 duration=$SECONDS
 echo                                                                                  &>> ${CONDA_BUILD_LOG}
-echo "[A6I_WIN_BLD_VIRTUAL_ENV]         Completed 'conda-build' in $duration sec"     &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV]         Completed 'conda-build' in $duration sec"     &>> ${CONDA_BUILD_LOG}
 
 echo                                                                                  &>> ${CONDA_BUILD_LOG}
 
@@ -107,16 +114,16 @@ fi
 cp -r ${WIN_ANACONDA_DIR}/envs/${VIRTUAL_ENV}/conda-bld/win-64 ${WIN_OUTPUT_DIR}/dist/  &>> ${CONDA_BUILD_LOG}
 
 echo                                                                                    &>> ${CONDA_BUILD_LOG}
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] Created these distributions:"                           &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] Created these distributions:"                           &>> ${CONDA_BUILD_LOG}
 echo                                                                                    &>> ${CONDA_BUILD_LOG}
 echo "$(ls ${WIN_OUTPUT_DIR}/dist)"                                                     &>> ${CONDA_BUILD_LOG}
 echo                                                                                    &>> ${CONDA_BUILD_LOG}
 
 if [ ! -z ${WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE} ]
     then
-        echo "[A6I_WIN_TEST_VIRTUAL_ENV] Removing virtual environment..."               &>> ${CONDA_BUILD_LOG}
+        echo "[WIN_BLD_VIRTUAL_ENV] Removing virtual environment..."               &>> ${CONDA_BUILD_LOG}
         yes "y" | ${BASE_CONDA_EXE} remove -n ${VIRTUAL_ENV} --all                      &>> ${CONDA_BUILD_LOG}
-        echo "[A6I_WIN_TEST_VIRTUAL_ENV] ...virtual environment removed"                &>> ${CONDA_BUILD_LOG}
+        echo "[WIN_BLD_VIRTUAL_ENV] ...virtual environment removed"                &>> ${CONDA_BUILD_LOG}
         echo
 fi
-echo "[A6I_WIN_BLD_VIRTUAL_ENV] =========== DONE"                                        &>> ${CONDA_BUILD_LOG}
+echo "[WIN_BLD_VIRTUAL_ENV] =========== DONE"                                        &>> ${CONDA_BUILD_LOG}
