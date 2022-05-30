@@ -14,7 +14,7 @@ _CFG__pipeline_description() {
 
 # Single-line description suitable for use when listing multiple pipelines
 _CFG__pipeline_short_description() {
-    echo "Used to test building Apodeixi ${_CFG__DEPLOYABLE_GIT_BRANCH} as a Linux container locally"
+    echo "Used to test building ${_CFG__DEPLOYABLE} ${_CFG__DEPLOYABLE_GIT_BRANCH} as a Linux container locally"
 }
 
 export _CFG__UBUNTU_IMAGE="ubuntu:20.04"
@@ -27,7 +27,7 @@ export _CFG__DEPLOYABLE="apodeixi"
 
 _CFG__set_build_docker_options() {
 
-    _CFG__DEPLOYABLE_GIT_URL="https://github.com/ChateauClaudia-Labs/apodeixi.git"  
+    _CFG__DEPLOYABLE_GIT_URL="https://github.com/ChateauClaudia-Labs/${_CFG__DEPLOYABLE}.git"  
 
     export _CFG__BUILD_DOCKER_OPTIONS=" -e _CFG__DEPLOYABLE_GIT_URL=${_CFG__DEPLOYABLE_GIT_URL} "
 }

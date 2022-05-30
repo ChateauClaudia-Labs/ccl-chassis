@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# This script creates an image for a container that can be used to build a conda package for Apodeixi
-#
+# This script creates an image for a container that can be used to build a conda package for the application
+# named ${_CFG__DEPLOYABLE}.
 #
 # As a precondition, the Docker daemon must be running. To start it in WSL2 Ubuntu, do someting like:
 #

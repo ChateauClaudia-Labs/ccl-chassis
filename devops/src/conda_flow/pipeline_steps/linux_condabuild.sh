@@ -77,16 +77,7 @@ fi
 #
 #       UPSHOT: to get a win-64 distribution one must build it in Windows, not convert a Linux distribution
 #
-#/home/anaconda3/bin/conda convert --platform all \
-#    /home/anaconda3/conda-bld/linux-64/apodeixi-${_CFG__DEPLOYABLE_VERSION}-py*.tar.bz2 \
-#    -o /home/output/dist        &>> ${CONDA_BUILD_LOG}
-#if [[ $? != 0 ]]; then
-#    error=$(</tmp/error)
-#    echo "${_SVC__ERR_PROMPT} ${error}" &>> ${CONDA_BUILD_LOG}
-#    # Signal error again, this time for caller to catch
-#    echo "Aborting build because: ${error}"  >/dev/stderr
-#    exit 1
-#fi
+
 
 # Move the linux-64 to this container's external volume for output
 cp -r /home/anaconda3/conda-bld/linux-64 /home/output/dist/

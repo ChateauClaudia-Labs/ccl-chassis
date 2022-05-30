@@ -35,9 +35,7 @@ fi
 
 export TEST_LOG="${LOGS_DIR}/${TIMESTAMP}_linux_test.txt"
 export PATH=/home/anaconda3/bin:$PATH      
-# Pick the first file in the distribution folder that seems to be an Apodeixi distribution for the version of interest
-#
-#  a=$(echo $(ls | grep "2021.11") | awk '{print $1}')
+
 DISTRIBUTION_FOLDER=/home/output/dist/linux-64
 if [ ! -d ${DISTRIBUTION_FOLDER} ]
     then
@@ -47,12 +45,12 @@ if [ ! -d ${DISTRIBUTION_FOLDER} ]
         exit 1
 fi
 echo "[A6I_TEST_CONTAINER] Looking for a file ${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}* in  ${DISTRIBUTION_FOLDER}" &>> ${TEST_LOG}
-export APODEIXI_DISTRIBUTION=$(echo $(ls ${DISTRIBUTION_FOLDER} | grep "${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}") | awk '{print $1}') \
+export DISTRIBUTION_TO_DEPLOY=$(echo $(ls ${DISTRIBUTION_FOLDER} | grep "${_CFG__DEPLOYABLE}-${_CFG__DEPLOYABLE_VERSION}") | awk '{print $1}') \
                 1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
-if [ -z ${APODEIXI_DISTRIBUTION} ]
+if [ -z ${DISTRIBUTION_TO_DEPLOY} ]
     then
-        error="Could not find Apodeixi distribution. Aborting"
+        error="Could not find ${_CFG__DEPLOYABLE} distribution. Aborting"
         echo "[A6I_TEST_CONTAINER] $error"       &>> ${TEST_LOG}
         echo $error                             >/dev/stderr
         exit 1
@@ -68,11 +66,11 @@ echo                                                                            
 cd ${WORKING_DIR}                                                                                           &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER] Current directory is $(pwd)"                                                     &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER] Current user is is $(whoami)"                                                    &>> ${TEST_LOG}
-echo "[A6I_TEST_CONTAINER] Distribution is ${APODEIXI_DISTRIBUTION}"                                        &>> ${TEST_LOG}
+echo "[A6I_TEST_CONTAINER] Distribution is ${DISTRIBUTION_TO_DEPLOY}"                                        &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 
 
-echo "[A6I_TEST_CONTAINER] =========== Installing Apodeixi and its dependencies..."                         &>> ${TEST_LOG}
+echo "[A6I_TEST_CONTAINER] =========== Installing ${_CFG__DEPLOYABLE} and its dependencies..."                         &>> ${TEST_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action takes
 SECONDS=0
 echo "[A6I_TEST_CONTAINER]  ... creating virtual environment..."                                            &>> ${TEST_LOG}                                                                 &>> ${TEST_LOG}
@@ -92,12 +90,12 @@ abort_testrun_on_error
 #       of doing 'conda activate <env>'
 
 echo                                                                                                        &>> ${TEST_LOG}
-echo "[A6I_TEST_CONTAINER]  ... conda install -n test-apo-bld ${APODEIXI_DISTRIBUTION}..."                 &>> ${TEST_LOG}
+echo "[A6I_TEST_CONTAINER]  ... conda install -n test-apo-bld ${DISTRIBUTION_TO_DEPLOY}..."                 &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
-conda install -n test-apo-bld ${DISTRIBUTION_FOLDER}/${APODEIXI_DISTRIBUTION}                        1>> ${TEST_LOG} 2>/tmp/error
+conda install -n test-apo-bld ${DISTRIBUTION_FOLDER}/${DISTRIBUTION_TO_DEPLOY}                        1>> ${TEST_LOG} 2>/tmp/error
 abort_testrun_on_error
 echo                                                                                                        &>> ${TEST_LOG}
-# At this point the virtual environment if pretty empty - it only has Apodeixi, but lacks Python and lacks dependencies.
+# At this point the virtual environment if pretty empty - it only has ${_CFG__DEPLOYABLE}, but lacks Python and lacks dependencies.
 # Both will be brought in if we install python
 echo "[A6I_TEST_CONTAINER]  ... now installing ${_CFG__DEPLOYABLE} dependencies..."                                    &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
@@ -105,7 +103,7 @@ yes " y" | conda install -n test-apo-bld python                                 
 echo                                                                                                        &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 duration=$SECONDS                                                                                           &>> ${TEST_LOG}
-echo "[A6I_TEST_CONTAINER] ...${APODEIXI_DISTRIBUTION} successfully installed in container in $duration sec" &>> ${TEST_LOG}
+echo "[A6I_TEST_CONTAINER] ...${DISTRIBUTION_TO_DEPLOY} successfully installed in container in $duration sec" &>> ${TEST_LOG}
 echo                                                                                                        &>> ${TEST_LOG}
 
 
@@ -129,10 +127,10 @@ echo &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER] =========== Working area and Python version"                                     &>> ${TEST_LOG}
 echo &>> ${TEST_LOG}
 
-# Need to work out the Python distribution so we can find the apodeixi folder where to run the tests. 
-# E.g., if Python 3.10.4 was installed, then apodeixi would have been installed in 
+# Need to work out the Python distribution so we can find the ${_CFG__DEPLOYABLE} folder where to run the tests. 
+# E.g., if Python 3.10.4 was installed, then ${_CFG__DEPLOYABLE} would have been installed in 
 #
-#       /home/anaconda3/envs/test-apo-bld/lib/python3.10/site-packages/apodeixi
+#       /home/anaconda3/envs/test-apo-bld/lib/python3.10/site-packages/${_CFG__DEPLOYABLE}
 #
 # So to construct the folder name "python3.10", we do these things:
 #
@@ -143,7 +141,7 @@ echo &>> ${TEST_LOG}
 #   - Pipe that to awk, getting the 2nd token: "3.10.4", and save it to a variable
 #   - Then pipe that result ("3.10.4") through awk twice, with a "." delimeter, getting $1, $2 respectively into
 #     variables for major and minor versions
-#   - Lastly, we assemble the python distribution folder: "python3.10", whice allows us to change directory to apodeixi
+#   - Lastly, we assemble the python distribution folder: "python3.10", whice allows us to change directory to ${_CFG__DEPLOYABLE}
 #
 full_version=$(conda run -n test-apo-bld python --version | awk '{print $2}')       &>> ${TEST_LOG}
 major_version=$(echo $full_version | awk -F. '{print $1}')                          &>> ${TEST_LOG}

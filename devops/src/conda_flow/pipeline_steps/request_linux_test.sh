@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 
-# This script conducts acceptance tests for Apodeixi by deploying the Apodeixi container, mounting on it
+# This script conducts acceptance tests for ${_CFG__DEPLOYABLE} by deploying the ${_CFG__DEPLOYABLE} container, mounting on it
 # an acceptance test database, running the tests, and producing test logs in a host folder that is mounted
-# on the Apodeixi container.
-#
-# NB: Because of the way how Apodeixi integration tests are designed, each of them will run on a dedicated
-#       Apodeixi environment with a dedicated test-specific `apodeixi_config.toml`. However, for the test harness
-#       to start an initial `apodeixi_config.toml` is needed, which is expected to be already provisioned
-#       in the test database, and is injected into the Apodeixi container via a mount.
+# on the ${_CFG__DEPLOYABLE} container.
 #
 # As a precondition, the Docker daemon must be running. To start it in WSL2 Ubuntu, do someting like:
 #
@@ -55,7 +50,7 @@ abort_on_error
 echo
 echo "${_SVC__INFO_PROMPT} Linux test container ${LINUX_TEST_CONTAINER} up and running..."
 echo
-echo "${_SVC__INFO_PROMPT} Attempting to run tests for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} using container ${LINUX_TEST_CONTAINER}..."
+echo "${_SVC__INFO_PROMPT} Attempting to run tests for ${_CFG__DEPLOYABLE} branch ${_CFG__DEPLOYABLE_GIT_BRANCH} using container ${LINUX_TEST_CONTAINER}..."
 echo "${_SVC__INFO_PROMPT}            (this might take a 3-4 minutes...)"
 
 docker exec ${LINUX_TEST_CONTAINER} /bin/bash /home/scripts/linux_test.sh 2>/tmp/error

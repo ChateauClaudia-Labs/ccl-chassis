@@ -1,7 +1,10 @@
 
   ------------- Help for apdo:
   
-    This utility is intended to help DevOps operators of the Apodeixi DevOps system.
+    This utility is intended to help DevOps operators of an application built with the CCL Chassis.
+
+    Requires that '$_CFG__PIPELINE_ALBUM' be set pointing to the pipeline album folder for the application in question. 
+
     Available commands:
 
       apdo --help                           Shows this help message

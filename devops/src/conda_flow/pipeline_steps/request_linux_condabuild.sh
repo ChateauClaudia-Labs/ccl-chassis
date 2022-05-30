@@ -41,9 +41,9 @@ export CONDABUILD_CONTAINER=$(docker ps -q -l) 2>/tmp/error
 abort_on_error
 
 echo "${_SVC__INFO_PROMPT} Conda build server container ${CONDABUILD_CONTAINER} up and running..."
-echo "${_SVC__INFO_PROMPT} ...attempting to build Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH}..."
+echo "${_SVC__INFO_PROMPT} ...attempting to build ${_CFG__DEPLOYABLE} branch ${_CFG__DEPLOYABLE_GIT_BRANCH}..."
 
-echo "${_SVC__INFO_PROMPT} ...building Apodeixi using container ${CONDABUILD_CONTAINER}... (this will take a 4-5 minutes)"
+echo "${_SVC__INFO_PROMPT} ...building ${_CFG__DEPLOYABLE} using container ${CONDABUILD_CONTAINER}... (this will take a 4-5 minutes)"
 echo
 
 docker exec ${CONDABUILD_CONTAINER} /bin/bash /home/scripts/linux_condabuild.sh 2>/tmp/error

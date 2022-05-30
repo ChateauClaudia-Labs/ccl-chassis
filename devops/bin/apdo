@@ -2,7 +2,8 @@
 
 # This script is targeted to DevOps operators to discover and operate pipelines.
 #
-# The name `apdo` is an abbreviation for Apodeixi DevOps
+# The name `apdo` was initially an abbreviation for Apodeixi DevOps, though it is independent of the Apodeixi project and provides
+# DevOps capabilities to any project adhering to CCL Chassis patterns.
 #
 # For example, doing
 #

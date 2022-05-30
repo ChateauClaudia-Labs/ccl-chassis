@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# This script builds a Windows distribution for Apodeixi by using a specific one-off virtual environment to 
-# do a conda-build for a given conda recipe for Apodeixi.
+# This script builds a Windows distribution for ${_CFG__DEPLOYABLE} by using a specific one-off virtual environment to 
+# do a conda-build for a given conda recipe for ${_CFG__DEPLOYABLE}.
 #
 
 export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
@@ -123,7 +123,7 @@ abort_on_error
 echo
 echo "${_SVC__INFO_PROMPT} ... done preparing the script that must be run in virtual environment"
 echo
-echo "${_SVC__INFO_PROMPT} Attempting to run conda build for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
+echo "${_SVC__INFO_PROMPT} Attempting to run conda build for ${_CFG__DEPLOYABLE} branch ${_CFG__DEPLOYABLE_GIT_BRANCH} in Windows Conda virtual environment..."
 echo "${_SVC__INFO_PROMPT}            (this might take a 5-10 minutes...)"
 
 # When we run the script, we must refer to it by a Windows path, even if above we manipulated it in Linux and hence have

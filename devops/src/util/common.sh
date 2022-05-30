@@ -24,8 +24,8 @@ unblock_bats() {
     if [ ! -z ${RUNNING_BATS} ]
         then
             echo "${_SVC__INFO_PROMPT} ...stopping test container..."
-            echo "${_SVC__INFO_PROMPT} ...stopped test container $(docker stop ${APODEIXI_CONTAINER})"
-            echo "${_SVC__INFO_PROMPT} ...removed test container $(docker rm ${APODEIXI_CONTAINER})"
+            echo "${_SVC__INFO_PROMPT} ...stopped test container $(docker stop ${CONTAINER_FOR_DEPLOYABLE})"
+            echo "${_SVC__INFO_PROMPT} ...removed test container $(docker rm ${CONTAINER_FOR_DEPLOYABLE})"
             echo
     fi    
 }
@@ -44,8 +44,8 @@ unblock_bats_in_build() {
 # For example, "220331.120319" is a run done at 12:03 pm (and 19 seconds) on March 31, 2022
 export TIMESTAMP="$(date +"%y%m%d.%H%M%S")"
 
-export _SVC__ERR_PROMPT="[A6I CI/CD ERROR]"
-export INFO_PROMPT="[A6I CI/CD INFO]"
+export _SVC__ERR_PROMPT="[CI/CD ERROR]"
+export _SVC__INFO_PROMPT="[CI/CD INFO]"
 
 # Check that the pipeline id was passed as argument $1
 if [ -z "$1" ]
@@ -58,7 +58,7 @@ export PIPELINE_NAME="$1_pipeline" # For example, '1001_pipeline'. This is a fol
 # We require that a pipeline "album" has been injected. A pipeline "album"
 # is simply a folder with subfolders called <ID>_pipeline, where <ID> identifies a pipeline in the "album".
 # Teach <ID>_pipeline folder contains subfolder for runs on the pipeline (logs, output, ...) and also contains a file
-# defining the pipeline ('pipeline_definition.sh'). This definition is interpreted by Apodeixi DevOps' code to run the 
+# defining the pipeline ('pipeline_definition.sh'). This definition is interpreted by CCL Chassis' DevOps' code to run the 
 # the generic pipeline steps but as configured specifically for the pipeline idenfified by <ID>
 #
 # So we require that the caller has set the variable ${_CFG__PIPELINE_ALBUM}, we use that; else we default it
@@ -173,6 +173,6 @@ fi
 if [ ! -z ${_CFG__DEPLOYABLE_IMAGE} ]
     then
         echo
-        echo "${_SVC__INFO_PROMPT} Will be working with Apodeixi image '${_CFG__DEPLOYABLE_IMAGE}'"
+        echo "${_SVC__INFO_PROMPT} Will be working with ${_CFG__DEPLOYABLE} image '${_CFG__DEPLOYABLE_IMAGE}'"
         echo
 fi

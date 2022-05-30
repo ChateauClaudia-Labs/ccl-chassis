@@ -10,8 +10,9 @@ RUN apt update && apt upgrade -y
 #       build of the image to "fail" because it will prompt a non-interactive user to select a timezone, and the build
 #       will then hang.
 ARG _CFG__UBUNTU_PYTHON_PACKAGE
-RUN apt install -y ${_CFG__UBUNTU_PYTHON_PACKAGE}
-RUN apt install -y python3-pip
+RUN echo "Will attempt to install ${_CFG__UBUNTU_PYTHON_PACKAGE}"
+RUN apt-get install -y ${_CFG__UBUNTU_PYTHON_PACKAGE}
+RUN apt-get install -y python3-pip
 RUN ln -s $(which ${_CFG__UBUNTU_PYTHON_PACKAGE}) /usr/bin/python
 RUN apt install -y git
 

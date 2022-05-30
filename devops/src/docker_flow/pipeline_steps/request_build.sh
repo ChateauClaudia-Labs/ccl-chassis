@@ -41,7 +41,7 @@ export BUILD_CONTAINER=$(docker ps -q -l) 2>/tmp/error
 abort_on_error
 
 echo "${_SVC__INFO_PROMPT} Build server container ${BUILD_CONTAINER} up and running..."
-echo "${_SVC__INFO_PROMPT} ...attempting to build Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH}..."
+echo "${_SVC__INFO_PROMPT} ...attempting to build ${_CFG__DEPLOYABLE} branch ${_CFG__DEPLOYABLE_GIT_BRANCH}..."
 
 echo "${_SVC__INFO_PROMPT} ...will build ${_CFG__DEPLOYABLE} using container ${BUILD_CONTAINER}..."
 docker exec ${BUILD_CONTAINER} /bin/bash /home/scripts/build.sh 2>/tmp/error

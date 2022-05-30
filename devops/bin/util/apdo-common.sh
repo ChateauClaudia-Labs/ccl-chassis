@@ -7,7 +7,10 @@ cli_help() {
   echo "
   ------------- Help for apdo:
   
-    This utility is intended to help DevOps operators of the Apodeixi DevOps system.
+    This utility is intended to help DevOps operators of an application built with the CCL Chassis.
+
+    Requires that '\$_CFG__PIPELINE_ALBUM' be set pointing to the pipeline album folder for the application in question. 
+
     Available commands:
 
       apdo --help                           Shows this help message
@@ -30,7 +33,7 @@ cli_argument_exists() {
 # We require that a pipeline "album" has been injected. A pipeline "album"
 # is simply a folder with subfolders called <ID>_pipeline, where <ID> identifies a pipeline in the "album".
 # Teach <ID>_pipeline folder contains subfolder for runs on the pipeline (logs, output, ...) and also contains a file
-# defining the pipeline ('pipeline_definition.sh'). This definition is interpreted by Apodeixi DevOps' code to run the 
+# defining the pipeline ('pipeline_definition.sh'). This definition is interpreted by DevOps' code to run the 
 # the generic pipeline steps but as configured specifically for the pipeline idenfified by <ID>
 #
 # So we require that the caller has set the variable ${_CFG__PIPELINE_ALBUM}, we use that; else we default it

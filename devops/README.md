@@ -19,7 +19,7 @@ As an example, the Apodeixi application has pipelines that will:
 
 The CCL-DevOps machinery is implemented as a suite of Bash scripts.
 
-Pipelines running CCL-DevOps are only meant to be run in Linux, even if CCL applications like Apodeixi orten are 
+Pipelines running CCL-DevOps are only meant to be run in Linux, even if CCL applications like Apodeixi often are 
 multi-platform (Windows and Unix).
 
 Windows developers must therefore rely on WSL to run CI/CD pipelines.
@@ -81,7 +81,8 @@ You must also set a couple of environment variables:
 * Add the bin folder of your CCL-DevOps installation to `$PATH`. For example, 
   `export PATH=/mnt/c/Users/aleja/Documents/Code/chateauclaudia-labs/ccl-chassis/devops/bin:$PATH`
 * `$_CFG__PIPELINE_ALBUM` to identify the folder containing the CCL-DevOps pipeline definitions for your application.
-  Typically this would be a folder in your application repo.
+  Typically this would be a folder in your application repo. For example, 
+  `export _CFG__PIPELINE_ALBUM="/mnt/c/Users/aleja/Documents/Code/chateauclaudia-labs/a6i_repos/apodeixi-devops/pipeline_album"`
 
 Once Docker is running, you may run CCL-DevOps pipeline by, for example:
 

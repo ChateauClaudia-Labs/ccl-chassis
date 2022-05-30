@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This script deploys Apodeixi to a chosen environment. I.e., it launches a container running Apodeixi with the
+# This script deploys ${_CFG__DEPLOYABLE} to a chosen environment. I.e., it launches a container running ${_CFG__DEPLOYABLE} with the
 # appropriate configuration that, in particular, points to an environment's data volumes.
 #
 # To run this script, change directory to the location of this script and do something like this from a command tool
@@ -28,24 +28,24 @@ echo
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
 
-# Comment this environment variable if we want to keep the Apodeixi container (e.g., to inspect problems) after we stop it
+# Comment this environment variable if we want to keep the ${_CFG__DEPLOYABLE} container (e.g., to inspect problems) after we stop it
 export REMOVE_CONTAINER_WHEN_DONE="--rm" 
 
 # Call application-side function to set application-specific $_CFG__DEPLOYMENT_DOCKER_OPTIONS
 _CFG__set_deployment_docker_options
 
-echo "${_SVC__INFO_PROMPT} About to start Apodeixi container..."
+echo "${_SVC__INFO_PROMPT} About to start ${_CFG__DEPLOYABLE} container..."
 docker run ${REMOVE_CONTAINER_WHEN_DONE} \
             ${_CFG__DEPLOYMENT_DOCKER_OPTIONS} \
             ${_CFG__DEPLOYABLE_IMAGE} & 2>/tmp/error # run in the background 
 abort_on_error
 
-echo "${_SVC__INFO_PROMPT} ...waiting for Apodeixi to start..."
+echo "${_SVC__INFO_PROMPT} ...waiting for ${_CFG__DEPLOYABLE} to start..."
 sleep 3 
-export APODEIXI_CONTAINER=$(docker ps -q -l) 2>/tmp/error
+export CONTAINER_FOR_DEPLOYABLE=$(docker ps -q -l) 2>/tmp/error
 abort_on_error
 
-echo "${_SVC__INFO_PROMPT} Apodeixi container ${APODEIXI_CONTAINER} up and running..."
+echo "${_SVC__INFO_PROMPT} ${_CFG__DEPLOYABLE} container ${CONTAINER_FOR_DEPLOYABLE} up and running..."
 
 # Run a couple of sanity checks that container is running fine and that the database was correctly mounted
 #
@@ -53,7 +53,7 @@ command="apo --version && apo get assertions"
 echo "[A6I_CONTAINER] Will verify that ${_CFG__DEPLOYABLE} is up and running by executing this command:"   &>> ${DEPLOYMENT_LOG}
 echo "[A6I_CONTAINER]               $command"                                                   &>> ${DEPLOYMENT_LOG} 
 echo                                                                                            &>> ${DEPLOYMENT_LOG}
-docker exec ${APODEIXI_CONTAINER} /bin/bash -c "$command"                                       &>> ${DEPLOYMENT_LOG} 2>/tmp/error
+docker exec ${CONTAINER_FOR_DEPLOYABLE} /bin/bash -c "$command"                                       &>> ${DEPLOYMENT_LOG} 2>/tmp/error
 abort_on_error
 echo "${_SVC__INFO_PROMPT} Verification that ${_CFG__DEPLOYABLE} is running properly gave this output when running the command"
 echo "${_SVC__INFO_PROMPT}                    $command"
@@ -68,7 +68,7 @@ tail -n 10 ${DEPLOYMENT_LOG}
 if [ ! -z ${RUNNING_BATS} ]
     then
         echo "${_SVC__INFO_PROMPT} ...stopping ${_CFG__DEPLOYABLE} container..."
-        echo "${_SVC__INFO_PROMPT} ...stopped ${_CFG__DEPLOYABLE} container $(docker stop ${APODEIXI_CONTAINER})"
+        echo "${_SVC__INFO_PROMPT} ...stopped ${_CFG__DEPLOYABLE} container $(docker stop ${CONTAINER_FOR_DEPLOYABLE})"
         echo
 fi
 

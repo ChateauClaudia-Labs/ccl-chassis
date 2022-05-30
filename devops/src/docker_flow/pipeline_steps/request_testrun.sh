@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 
-# This script conducts acceptance tests for Apodeixi by deploying the Apodeixi container, mounting on it
+# This script conducts acceptance tests for ${_CFG__DEPLOYABLE} by deploying the ${_CFG__DEPLOYABLE} container, mounting on it
 # an acceptance test database, running the tests, and producing test logs in a host folder that is mounted
-# on the Apodeixi container.
-#
-# NB: Because of the way how Apodeixi integration tests are designed, each of them will run on a dedicated
-#       Apodeixi environment with a dedicated test-specific `apodeixi_config.toml`. However, for the test harness
-#       to start an initial `apodeixi_config.toml` is needed, which is expected to be already provisioned
-#       in the test database, and is injected into the Apodeixi container via a mount.
+# on the ${_CFG__DEPLOYABLE} container.
 #
 # To run this script, change directory to the location of this script and do something like this from a command tool
 #
@@ -17,8 +12,6 @@
 #
 #               sudo service docker start
 #
-
-# Apodeixi environment settings
 
 export _SVC__ROOT="$( cd "$( dirname $0 )/../../../" >/dev/null 2>&1 && pwd )"
 export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
@@ -50,26 +43,26 @@ docker run  -e TIMESTAMP=${TIMESTAMP} \
             ${_CFG__DEPLOYABLE_IMAGE} & 2>/tmp/error # run in the background so rest of this script can proceed
 abort_on_error
 
-echo "${_SVC__INFO_PROMPT} ...waiting for Apodeixi test container to start..."
+echo "${_SVC__INFO_PROMPT} ...waiting for ${_CFG__DEPLOYABLE} test container to start..."
 sleep 3
 
-export APODEIXI_CONTAINER=$(docker ps -q -l) 2>/tmp/error
+export CONTAINER_FOR_DEPLOYABLE=$(docker ps -q -l) 2>/tmp/error
 abort_on_error
 
 echo
-echo "${_SVC__INFO_PROMPT} Apodeixi test container ${APODEIXI_CONTAINER} up and running..."
+echo "${_SVC__INFO_PROMPT} ${_CFG__DEPLOYABLE} test container ${CONTAINER_FOR_DEPLOYABLE} up and running..."
 echo
-echo "${_SVC__INFO_PROMPT} Attempting to run tests for Apodeixi branch ${_CFG__DEPLOYABLE_GIT_BRANCH} using container ${APODEIXI_CONTAINER}..."
+echo "${_SVC__INFO_PROMPT} Attempting to run tests for ${_CFG__DEPLOYABLE} branch ${_CFG__DEPLOYABLE_GIT_BRANCH} using container ${CONTAINER_FOR_DEPLOYABLE}..."
 echo "${_SVC__INFO_PROMPT}            (this might take a 1-2 minutes...)"
 
-docker exec ${APODEIXI_CONTAINER} /bin/bash /home/scripts/testrun.sh 2>/tmp/error
+docker exec ${CONTAINER_FOR_DEPLOYABLE} /bin/bash /home/scripts/testrun.sh 2>/tmp/error
 # We don't use the generic function ./common.sh::abort_on_error because we want to warn the user that a rogue container
 # was left running, so we manually write the code to catch and handle the exception
 if [[ $? != 0 ]]; then
     error=$(</tmp/error)
     echo "${_SVC__ERR_PROMPT} ${error}"
     echo
-    echo "${_SVC__ERR_PROMPT} Due to above error, cleanup wasn't done. Container ${APODEIXI_CONTAINER} needs to be manually stopped"
+    echo "${_SVC__ERR_PROMPT} Due to above error, cleanup wasn't done. Container ${CONTAINER_FOR_DEPLOYABLE} needs to be manually stopped"
     echo 
     echo "${_SVC__ERR_PROMPT} For more detail on error, check logs under ${PIPELINE_STEP_OUTPUT}"
     unblock_bats
@@ -85,8 +78,8 @@ echo "${_SVC__INFO_PROMPT} Testrun was successful"
 if [ ! -z ${REMOVE_CONTAINER_WHEN_DONE} ] || [ ! -z ${RUNNING_BATS} ]
     then
         echo "${_SVC__INFO_PROMPT} ...stopping test container..."
-        echo "${_SVC__INFO_PROMPT} ...stopped test container $(docker stop ${APODEIXI_CONTAINER})"
-        echo "${_SVC__INFO_PROMPT} ...removed test container $(docker rm ${APODEIXI_CONTAINER})"
+        echo "${_SVC__INFO_PROMPT} ...stopped test container $(docker stop ${CONTAINER_FOR_DEPLOYABLE})"
+        echo "${_SVC__INFO_PROMPT} ...removed test container $(docker rm ${CONTAINER_FOR_DEPLOYABLE})"
         echo
 fi
 

@@ -46,7 +46,7 @@ echo "[A6I_TEST_CONTAINER] Current directory is $(pwd)"     &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER] Current user is is $(whoami)"    &>> ${TEST_LOG}
 echo                                                        &>> ${TEST_LOG}
 
-# The container already has Apodeixi, but we need git and python in order to install and then run the tests
+# The container already has ${_CFG__DEPLOYABLE}, but we need git and python in order to install and then run the tests
 #
 echo "[A6I_TEST_CONTAINER] Installing git in order to run the tests..." &>> ${TEST_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action took
