@@ -18,12 +18,16 @@ _CFG__pipeline_short_description() {
 }
 
 export _CFG__UBUNTU_IMAGE="ubuntu:20.04"
-export PYTHON_VERSION="3.9"
+export _CFG__PYTHON_VERSION="3.9"
 
 # Release version that is to be built
 export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.8"
 export _CFG__DEPLOYABLE_VERSION="0.9.8"
 export _CFG__DEPLOYABLE="apodeixi"
+
+# This is the path from (and including) the root folder for the repo all to way to the deployable. In the case
+# of Apodeixi it is "trivial" since there is only 1 deployable in the repo
+export _CFG__DEPLOYABLE_RELATIVE_PATH="${_CFG__DEPLOYABLE}"
 
 _CFG__set_build_docker_options() {
 

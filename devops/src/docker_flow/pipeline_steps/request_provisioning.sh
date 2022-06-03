@@ -19,9 +19,6 @@ export PIPELINE_SCRIPTS="${_SVC__ROOT}/src"
 
 source ${PIPELINE_SCRIPTS}/util/common.sh
 
-export _CFG__UBUNTU_IMAGE="ubuntu:20.04"
-export PYTHON_VERSION="3.9"
-
 LOGS_DIR="${PIPELINE_STEP_OUTPUT}/logs" # This is a mount of a directory in host machine, so it might already exist
 if [ ! -d "${LOGS_DIR}" ]; then
   mkdir ${LOGS_DIR}
@@ -32,7 +29,7 @@ echo
 echo "${_SVC__INFO_PROMPT} ---------------- Starting provisioning step"
 echo
 echo "${_SVC__INFO_PROMPT} _CFG__UBUNTU_IMAGE=${_CFG__UBUNTU_IMAGE}"
-echo "${_SVC__INFO_PROMPT} PYTHON_VERSION=${PYTHON_VERSION}"
+echo "${_SVC__INFO_PROMPT} _CFG__PYTHON_VERSION=${_CFG__PYTHON_VERSION}"
 echo
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
 SECONDS=0
@@ -74,7 +71,7 @@ echo                                                                            
 echo "=============== Output from building ${_CFG__DEPLOYABLE} image '${_CFG__DEPLOYABLE_IMAGE}'"  &>> ${PROVISIONING_LOG}
 echo                                                                            &>> ${PROVISIONING_LOG}
 docker build --build-arg _CFG__UBUNTU_IMAGE \
-            --build-arg PYTHON_VERSION \
+            --build-arg PYTHON_VERSION=${_CFG__PYTHON_VERSION} \
             --build-arg _CFG__DEPLOYABLE_VERSION \
             --build-arg _CFG__DEPLOYABLE \
             -t ${_CFG__DEPLOYABLE_IMAGE} ${WORK_FOLDER} 1>> ${PROVISIONING_LOG} 2>/tmp/error

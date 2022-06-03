@@ -19,7 +19,7 @@ _CFG__pipeline_short_description() {
 }
 
 export _CFG__UBUNTU_IMAGE="ubuntu:20.04"
-export PYTHON_VERSION="3.9"
+export _CFG__PYTHON_VERSION="3.9"
 
 # Release version that is to be built
 export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.8"

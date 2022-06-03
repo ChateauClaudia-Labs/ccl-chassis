@@ -49,7 +49,8 @@ echo "${_SVC__INFO_PROMPT} ${_CFG__DEPLOYABLE} container ${CONTAINER_FOR_DEPLOYA
 
 # Run a couple of sanity checks that container is running fine and that the database was correctly mounted
 #
-command="apo --version && apo get assertions"
+#command="apo --version && apo get assertions"
+command="${_CFG__DEPLOYMENT_VALIDATION_COMMAND}"
 echo "[A6I_CONTAINER] Will verify that ${_CFG__DEPLOYABLE} is up and running by executing this command:"   &>> ${DEPLOYMENT_LOG}
 echo "[A6I_CONTAINER]               $command"                                                   &>> ${DEPLOYMENT_LOG} 
 echo                                                                                            &>> ${DEPLOYMENT_LOG}
