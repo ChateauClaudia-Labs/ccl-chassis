@@ -48,7 +48,7 @@ echo &>> ${BUILD_LOG}
 
 echo "[_CFG__BUILD_SERVER] =========== Working area and Python version" &>> ${BUILD_LOG}
 echo &>> ${BUILD_LOG}
-cd ${WORKING_DIR}/${_CFG__DEPLOYABLE} &>> ${BUILD_LOG}
+cd ${WORKING_DIR}/${_CFG__DEPLOYABLE_RELATIVE_PATH} &>> ${BUILD_LOG}
 echo "[_CFG__BUILD_SERVER] Current directory is $(pwd)" &>> ${BUILD_LOG}
 echo &>> ${BUILD_LOG}
 echo "[_CFG__BUILD_SERVER] Python version is $(python --version)" &>> ${BUILD_LOG}

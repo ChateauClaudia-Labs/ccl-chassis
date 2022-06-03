@@ -112,5 +112,15 @@ and later unset it when you no longer want to retain temporary output:
 
 `unset KEEP_TEST_OUTPUT`
 
+# Troubleshooting containers
 
+Once an image is built, you can try troubleshooting it was built properly by doing
 
+* Start a container in the background:
+
+    `docker run --rm -<image name> &`
+
+* Start a shell in the container in question (but first get its name)
+
+    `export CONTAINER="$(docker ps -l  --format '{{.Names}}')"; echo ${CONTAINER}`
+    `docker exec -it ${CONTAINER} /bin/bash`

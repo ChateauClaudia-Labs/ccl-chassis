@@ -29,6 +29,7 @@ docker run ${REMOVE_CONTAINER_WHEN_DONE} \
             -e TIMESTAMP=${TIMESTAMP} \
             -e _CFG__DEPLOYABLE_GIT_BRANCH=${_CFG__DEPLOYABLE_GIT_BRANCH} \
             -e _CFG__DEPLOYABLE=${_CFG__DEPLOYABLE} \
+            -e _CFG__DEPLOYABLE_RELATIVE_PATH=${_CFG__DEPLOYABLE_RELATIVE_PATH} \
             ${_CFG__BUILD_DOCKER_OPTIONS} \
             -v ${PIPELINE_STEP_OUTPUT}:/home/output -v ${PIPELINE_SCRIPTS}/docker_flow/pipeline_steps:/home/scripts \
             ${_CFG__BUILD_SERVER} & 2>/tmp/error  # run in the background so rest of this script can proceed
