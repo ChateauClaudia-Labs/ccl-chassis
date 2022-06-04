@@ -25,6 +25,8 @@ export _CFG__PYTHON_VERSION="3.9"
 export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.8"
 export _CFG__DEPLOYABLE_VERSION="0.9.8"
 export _CFG__DEPLOYABLE="apodeixi"
+export _CFG__APPLICATION="${_CFG__DEPLOYABLE}"
+export _CFG__APPLICATION_BASE_IMAGE="${_CFG__APPLICATION}-base"
 
 export _CFG__DEPLOYABLE_GIT_URL="https://github.com/ChateauClaudia-Labs/${_CFG__DEPLOYABLE}.git"
 

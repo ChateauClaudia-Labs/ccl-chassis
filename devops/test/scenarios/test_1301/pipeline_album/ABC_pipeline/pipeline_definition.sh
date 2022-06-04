@@ -26,6 +26,8 @@ export _CFG__UBUNTU_PYTHON_PACKAGE="python3.9"
 export _CFG__DEPLOYABLE_GIT_BRANCH="v0.9.8"
 export _CFG__DEPLOYABLE_VERSION="0.9.8"
 export _CFG__DEPLOYABLE="apodeixi"
+export _CFG__APPLICATION="${_CFG__DEPLOYABLE}"
+export _CFG__APPLICATION_BASE_IMAGE="${_CFG__APPLICATION}-base"
 
 # Define which server image to use for the build. Determines version of Ubuntu and Python for the container where the build runs
 export _CFG__BUILD_SERVER="a6i-build-server"
