@@ -29,9 +29,10 @@ echo
 echo "${_SVC__INFO_PROMPT} ---------------- Starting provisioning step"
 echo
 echo "${_SVC__INFO_PROMPT} _CFG__UBUNTU_IMAGE=${_CFG__UBUNTU_IMAGE}"
+echo "${_SVC__INFO_PROMPT} _CFG__APPLICATION_BASE_IMAGE=${_CFG__APPLICATION_BASE_IMAGE}"
 echo "${_SVC__INFO_PROMPT} _CFG__PYTHON_VERSION=${_CFG__PYTHON_VERSION}"
 echo
-# Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took
+# Initialize Bash's `SECONDS` timer so that at the end we can compute how long this sript took _CFG__APPLICATION_BASE_IMAGE
 SECONDS=0
 
 # GOTCHA: Docker relies on a "context folder" to build images. This "context folder" is "passed" to the Docker daemon, so all 
@@ -60,18 +61,11 @@ abort_on_error
 echo "${_SVC__INFO_PROMPT} Switching directory to work folder"
 cd ${WORK_FOLDER}
 
-echo "${_SVC__INFO_PROMPT} About to downlod pip to work folder..."
-echo                                                                            &>> ${PROVISIONING_LOG}
-echo "=============== Output from 'curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py"  &>> ${PROVISIONING_LOG}
-echo                                                                            &>> ${PROVISIONING_LOG}
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py                         &>> ${PROVISIONING_LOG}
-
 echo "${_SVC__INFO_PROMPT} About to build ${_CFG__DEPLOYABLE} image '${_CFG__DEPLOYABLE_IMAGE}'..."
 echo                                                                            &>> ${PROVISIONING_LOG}
 echo "=============== Output from building ${_CFG__DEPLOYABLE} image '${_CFG__DEPLOYABLE_IMAGE}'"  &>> ${PROVISIONING_LOG}
 echo                                                                            &>> ${PROVISIONING_LOG}
-docker build --build-arg _CFG__UBUNTU_IMAGE \
-            --build-arg PYTHON_VERSION=${_CFG__PYTHON_VERSION} \
+docker build --build-arg _CFG__APPLICATION_BASE_IMAGE \
             --build-arg _CFG__DEPLOYABLE_VERSION \
             --build-arg _CFG__DEPLOYABLE \
             -t ${_CFG__DEPLOYABLE_IMAGE} ${WORK_FOLDER} 1>> ${PROVISIONING_LOG} 2>/tmp/error

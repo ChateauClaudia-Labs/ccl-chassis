@@ -46,27 +46,6 @@ echo "[A6I_TEST_CONTAINER] Current directory is $(pwd)"     &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER] Current user is is $(whoami)"    &>> ${TEST_LOG}
 echo                                                        &>> ${TEST_LOG}
 
-# The container already has ${_CFG__DEPLOYABLE}, but we need git and python in order to install and then run the tests
-#
-echo "[A6I_TEST_CONTAINER] Installing git in order to run the tests..." &>> ${TEST_LOG}
-# Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action took
-SECONDS=0
-echo "[A6I_TEST_CONTAINER] ======== Starting apt-get update..."     &>> ${TEST_LOG}
-echo                                                        &>> ${TEST_LOG}
-apt-get update                                              1>> ${TEST_LOG} 2>/tmp/error
-abort_testrun_on_error
-echo "[A6I_TEST_CONTAINER]          ... completed apt-get update"     &>> ${TEST_LOG}
-echo                                                        &>> ${TEST_LOG}
-echo "[A6I_TEST_CONTAINER] ======== Starting apt-get install -y git..."     &>> ${TEST_LOG}
-echo                                                        &>> ${TEST_LOG}
-apt-get install -y git                                      1>> ${TEST_LOG} 2>/tmp/error
-abort_testrun_on_error
-echo "[A6I_TEST_CONTAINER] ... completed apt-get install -y git"     &>> ${TEST_LOG}
-echo
-duration=$SECONDS                                                        &>> ${TEST_LOG}
-echo "[A6I_TEST_CONTAINER] ...git successfully installed in container in $duration sec" &>> ${TEST_LOG}
-echo                                                        &>> ${TEST_LOG}
-
 echo "[A6I_TEST_CONTAINER] =========== git clone ${_CFG__TESTDB_GIT_URL} --branch ${_CFG__DEPLOYABLE_GIT_BRANCH}" &>> ${TEST_LOG}
 echo "[A6I_TEST_CONTAINER]              (current directory for git clone is $(pwd)"                     &>> ${TEST_LOG}
 # Initialize Bash's `SECONDS` timer so that at the end we can compute how long this action took
