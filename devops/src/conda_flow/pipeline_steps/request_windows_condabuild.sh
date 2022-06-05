@@ -59,7 +59,8 @@ if [ ! -d "${WORKING_DIR}" ]; then
 fi
 
 # The Conda recipe might exist in a Linux-only folder. So move it to a Windows folder
-cp ${CONDA_RECIPE_DIR}/${_CFG__CONDA_RECIPE} ${WORKING_DIR}/${_CFG__CONDA_RECIPE}
+echo "${_SVC__INFO_PROMPT} Copying conda recipe to a Windows folder"
+cp -r ${CONDA_RECIPE_DIR}/${_CFG__CONDA_RECIPE} ${WORKING_DIR}/${_CFG__CONDA_RECIPE}
 abort_on_error
 
 WIN_ERR_PROMPT="${_SVC__ERR_PROMPT}"
