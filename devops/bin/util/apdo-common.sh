@@ -3,6 +3,15 @@
 export INFO_PROMPT="[APDO INFO]"
 export ERROR_PROMPT="[APDO ERROR]"
 
+# The _CFG__PIPELINE_HISTORY is the root folder where pipeline runs store all their output, logs, etc.,
+# organized in subfolders per pipeline name, then by run for each pipeline.
+#
+#   If it is not set, we will assume that output shoud be saved in the album definition itself.
+if [ -z "${_CFG__PIPELINE_HISTORY}" ]
+    then
+        export _CFG__PIPELINE_HISTORY=${_CFG__PIPELINE_ALBUM}/../apdo_builds
+fi
+
 cli_help() {
   echo "
   ------------- Help for apdo:

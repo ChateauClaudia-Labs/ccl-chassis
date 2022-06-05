@@ -97,7 +97,7 @@ echo
 #   If it is not set, we will assume that output shoud be saved in the album definition itself.
 if [ -z "${_CFG__PIPELINE_HISTORY}" ]
     then
-        export _CFG__PIPELINE_HISTORY=${_CFG__PIPELINE_ALBUM}
+        export _CFG__PIPELINE_HISTORY=${_CFG__PIPELINE_ALBUM}/../apdo_builds
 fi
 
 # Used for writing all output produced by a pipeline run. 

@@ -1,6 +1,8 @@
 # Added by Alejandro Hernandez
 output
 
+apdo_builds/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

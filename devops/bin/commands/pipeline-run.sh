@@ -23,7 +23,7 @@ source "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/pipeline_definition.sh"
 # GOTCHA: In case $RUN_TIMESTAMP is set, reset it since we want to do a brand new run with its own 
 #           dedicated timestamp. We don't want to log into a prior run's log folder
 export RUN_TIMESTAMP="$(date +"%y%m%d.%H%M%S")"
-LOGS_DIR="${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/output/${RUN_TIMESTAMP}_pipeline_run/logs" 
+LOGS_DIR="${_CFG__PIPELINE_HISTORY}/${PIPELINE_NAME}/output/${RUN_TIMESTAMP}_pipeline_run/logs" 
 if [ ! -d "${LOGS_DIR}" ]; then
     mkdir -p ${LOGS_DIR} # -p flag creates intermediate directories if they are missing too
 fi
