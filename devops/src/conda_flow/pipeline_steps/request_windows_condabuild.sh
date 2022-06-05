@@ -57,12 +57,16 @@ if [ ! -d "${WORKING_DIR}" ]; then
     #rm -rf ${WORKING_DIR}
     mkdir ${WORKING_DIR}
 fi
-#mkdir ${WORKING_DIR}
+
+# The Conda recipe might exist in a Linux-only folder. So move it to a Windows folder
+cp ${CONDA_RECIPE_DIR}/${_CFG__CONDA_RECIPE} ${WORKING_DIR}/${_CFG__CONDA_RECIPE}
+abort_on_error
 
 WIN_ERR_PROMPT="${_SVC__ERR_PROMPT}"
 WIN_TIMESTAMP="${TIMESTAMP}"
 WIN_CONDA_RECIPE="${_CFG__CONDA_RECIPE}"
-WIN_CONDA_RECIPE_DIR=$(to_windows_path ${CONDA_RECIPE_DIR})
+#WIN_CONDA_RECIPE_DIR=$(to_windows_path ${CONDA_RECIPE_DIR})
+WIN_CONDA_RECIPE_DIR=$(to_windows_path ${WORKING_DIR})
 WIN_REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE="${REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE}"
 
 echo
