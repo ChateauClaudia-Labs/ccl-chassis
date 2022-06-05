@@ -41,6 +41,11 @@ export REMOVE_VIRTUAL_ENVIRONMENT_WHEN_DONE=1
 to_windows_path() {     # Expects $1 argument to be a Linux path that starts with /mnt/c/....
     result=$( echo $1 | awk -Fmnt '{printf $2}')
     abort_on_error
+    if [ -z $result ]
+        then
+            echo "${_SVC__ERR_PROMPT} This is not a valid windows path in WSL: ${1}"
+            exit 1
+    fi
     echo $result
 }
 

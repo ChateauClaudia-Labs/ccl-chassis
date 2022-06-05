@@ -32,12 +32,21 @@ Under this pattern:
 
 GIT submodule functionality is used to inject dependencies into this project. So after cloning this project, you will
 need to set up the following submodules of the `ccl-chassis` GIT project.
-Without them some of the CCL-Chassis' modules, such as CCL-DevOps, would not work properly:
+Without them some of the CCL-Chassis' modules, such as CCL-DevOps, would not work properly.
+
+When the repo was created, this was done (you don't need to do this if cloning - read below):
 
 `git submodule add https://github.com/bats-core/bats-core.git bats`
 `git submodule add https://github.com/bats-core/bats-support.git bats_helpers/bats-support`
 `git submodule add https://github.com/bats-core/bats-assert.git bats_helpers/bats-assert`
 `git submodule add https://github.com/bats-core/bats-file.git bats_helpers/bats-file`
+
+If you clone this repo, then you must do this instead (as `git submodule add` would give you errors):
+
+In the root for the CCL Chassis repo, do:
+
+`git submodule init`
+`git submodule update --remote`
 
 From time to time these submodules should updated, by doing 
 

@@ -91,23 +91,32 @@ echo
   && echo \
   && exit 1
 
+# The _CFG__PIPELINE_HISTORY is the root folder where pipeline runs store all their output, logs, etc.,
+# organized in subfolders per pipeline name, then by run for each pipeline.
+#
+#   If it is not set, we will assume that output shoud be saved in the album definition itself.
+if [ -z "${_CFG__PIPELINE_HISTORY}" ]
+    then
+        export _CFG__PIPELINE_HISTORY=${_CFG__PIPELINE_ALBUM}
+fi
+
 # Used for writing all output produced by a pipeline run. 
 # In particular, it is passed as an external volume to containers used by the pipeline to e.g. build.
 # This could be injected if the environment variable was previously set (for example, test cases may want to
 # inject it to be a sub-area of test output's area), but if it has not been injected, we default it.
 if [ -z "${PIPELINE_STEP_OUTPUT}" ]
     then
-        export PIPELINE_STEP_OUTPUT=${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/output/${RUN_TIMESTAMP}_pipeline_run
-        if [ ! -d "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/output" ]
+        export PIPELINE_STEP_OUTPUT=${_CFG__PIPELINE_HISTORY}/${PIPELINE_NAME}/output/${RUN_TIMESTAMP}_pipeline_run
+        if [ ! -d "${_CFG__PIPELINE_HISTORY}/${PIPELINE_NAME}/output" ]
             then
-                mkdir "${_CFG__PIPELINE_ALBUM}/${PIPELINE_NAME}/output"
+                mkdir -p "${_CFG__PIPELINE_HISTORY}/${PIPELINE_NAME}/output"
         fi
 fi
 
 # Create output folder if it does not already exist
 if [ ! -d "${PIPELINE_STEP_OUTPUT}" ]
     then
-        mkdir "${PIPELINE_STEP_OUTPUT}"
+        mkdir -p "${PIPELINE_STEP_OUTPUT}"
 fi
 
 
